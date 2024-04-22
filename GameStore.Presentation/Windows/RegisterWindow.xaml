@@ -1,0 +1,58 @@
+﻿<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:Models="clr-namespace:GameStore.DB.Models;assembly=GameStore.DB" xmlns:controls="clr-namespace:GameStore.Presentation.Controls"
+		x:Class="GameStore.Presentation.Windows.RegisterWindow"
+		mc:Ignorable="d"
+		Title="Регистрация"
+		ResizeMode="NoResize"
+		Icon="/Resources/logo.png" 
+		SizeToContent="WidthAndHeight" 
+		WindowStartupLocation="CenterScreen">
+	<Window.DataContext>
+		<Models:User/>
+	</Window.DataContext>
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Margin="5">
+			<Label Content="Имя пользователя"/>
+			<TextBox x:Name="usernameField" Text="{Binding Username}" MaxLength="32" LostFocus="OnUsernameInputEnded"/>
+		</StackPanel>
+		<StackPanel Grid.Column="1" Margin="5">
+			<Label Content="Дата рождения"/>
+			<DatePicker x:Name="dateOfBirthField"/>
+		</StackPanel>
+		<controls:UploadImageArea x:Name="avatar" Grid.Row="1" Grid.RowSpan="3" Width="128" Height="128" Margin="10" Source="{Binding Avatar}" />
+		<StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
+			<Label Content="Логин"/>
+			<TextBox x:Name="loginField" Text="{Binding Login}" MaxLength="32" TextChanged="OnLoginChanged"/>
+		</StackPanel>
+		<StackPanel Grid.Row="2" Grid.Column="1" Margin="5">
+			<Label Content="Придумайте пароль"/>
+			<PasswordBox x:Name="passwordField" MaxLength="128"/>
+		</StackPanel>
+		<StackPanel Grid.Row="3" Grid.Column="1" Margin="5">
+			<Label Content="Повторите пароль"/>
+			<PasswordBox x:Name="repeatedPasswordField" MaxLength="128"/>
+		</StackPanel>
+		<controls:CaptchaBox x:Name="captcha" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Question="0.1 + 0.2" ExpectedAnswer="0.3" Margin="5"/>
+		<StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="5">
+			<Button HorizontalAlignment="Center" Content="Зарегистрироваться" Click="OnSubmit"/>
+			<Button Style="{StaticResource HyperlinkButton}" FontSize="9" HorizontalAlignment="Center" Content="Уже есть учётная запись?" Click="OnLoginButtonClick"/>
+		</StackPanel>
+	</Grid>
+</Window>
