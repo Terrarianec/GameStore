@@ -1,5 +1,6 @@
 ﻿using GameStore.DB;
 using GameStore.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -38,7 +39,10 @@ namespace GameStore.Presentation.Windows
 		{
 			using var context = new GameStoreContext();
 
-			var user = context.Users.Where(u => u.Login == login && u.PasswordHash == passwordHash).FirstOrDefault();
+			var user = context.Users
+				.AsNoTracking()
+				.Where(u => u.Login == login && u.PasswordHash == passwordHash)
+				.FirstOrDefault();
 
 			if (user == null)
 			{

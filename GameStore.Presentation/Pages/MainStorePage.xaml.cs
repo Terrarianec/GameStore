@@ -27,8 +27,6 @@ namespace GameStore.Presentation.Pages
 		{
 			var selectedGame = (Game)((Button)sender).Tag;
 
-			//MessageBox.Show($"Когда-то это заставит открыться страницу {selectedGame.Name}");
-
 			MainWindow.SetActivePage(new GamePage(selectedGame));
 		}
 	}
