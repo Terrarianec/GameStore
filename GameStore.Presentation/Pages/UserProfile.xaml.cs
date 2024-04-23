@@ -1,7 +1,9 @@
 ﻿using GameStore.DB;
 using GameStore.DB.Models;
+using GameStore.Presentation.Windows;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using System.Windows.Controls;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace GameStore.Presentation.Pages
@@ -11,6 +13,7 @@ namespace GameStore.Presentation.Pages
 	/// </summary>
 	public partial class UserProfile : UserControl
 	{
+		private readonly GameStoreContext _context = new GameStoreContext();
 		private readonly int _id;
 
 		public UserProfile(int userId)
@@ -22,9 +25,9 @@ namespace GameStore.Presentation.Pages
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			using var context = new GameStoreContext();
 
-			var user = context.Users
+			var user = _context.Users
+				.AsNoTracking()
 				.Include(u => u.Member)
 				.ThenInclude(m => m.Team)
 				.Include(u => u.Games)
@@ -34,12 +37,19 @@ namespace GameStore.Presentation.Pages
 			SetUser(await user);
 		}
 
-		private void OnTeamButtonClick(object sender, RoutedEventArgs e)
+		private void OnTeamClick(object sender, RoutedEventArgs e)
 		{
 			MessageBox.Show("Тут должен быть переход на страницу команды");
 		}
 
-		private void SetUser(User? user)
+		private void OnGameClick(object sender, RoutedEventArgs e)
+		{
+			var selectedGame = (Game)((Button)sender).Tag;
+
+			MainWindow.SetActivePage(new GamePage(selectedGame));
+		}
+
+		private async void SetUser(User? user)
 		{
 			DataContext = user;
 
@@ -47,6 +57,17 @@ namespace GameStore.Presentation.Pages
 			{
 				noTeamLabel.Visibility = Visibility.Hidden;
 				teamLink.Visibility = Visibility.Visible;
+			}
+
+			if (user is not null)
+			{
+				gamesListView.ItemsSource = await _context.Games
+					.AsNoTracking()
+					.Include(g => g.Users)
+					.Include(g => g.Reviews)
+					.Include(g => g.Tags)
+					.Where(g => g.Users.Any(u => u.Id == user.Id))
+					.ToListAsync();
 			}
 		}
 	}

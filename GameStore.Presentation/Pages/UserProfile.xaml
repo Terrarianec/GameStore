@@ -1,50 +1,133 @@
 ﻿<UserControl x:Class="GameStore.Presentation.Pages.UserProfile"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GameStore.Presentation.Pages"
-             mc:Ignorable="d" Loaded="OnLoaded">
-	<StackPanel Background="Transparent">
-		<StackPanel Orientation="Horizontal" Background="Transparent">
-			<Image Width="256" Height="256" Stretch="Fill" Margin="32">
-				<Image.Source>
-					<Binding Path="Avatar">
-						<Binding.TargetNullValue>
-							<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-						</Binding.TargetNullValue>
-					</Binding>
-				</Image.Source>
-			</Image>
-			<TextBlock Text="{Binding Username}" Height="256" Foreground="#FF218ACC" Margin="5" FontSize="48"/>
-		</StackPanel>
-		<Separator/>
-		<StackPanel>
-			<Label Content="Команда" HorizontalAlignment="Center" Foreground="Gray" FontSize="24"/>
-			<Grid x:Name="teamInfo">
-				<Label x:Name="noTeamLabel" Content="Отсутствует" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF636363" FontSize="24"/>
-				<Button x:Name="teamLink" Style="{StaticResource HyperlinkButton}" Visibility="Hidden" Click="OnTeamButtonClick" Cursor="Hand">
-					<StackPanel Orientation="Horizontal" Background="Transparent">
-						<Image Width="64" Height="64" Stretch="Fill" Margin="1">
-							<Image.Source>
-								<Binding Path="Member.Team.Logo">
-									<Binding.TargetNullValue>
-										<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-									</Binding.TargetNullValue>
-								</Binding>
-							</Image.Source>
-						</Image>
-						<Label VerticalAlignment="Center" Content="{Binding Member.Team.Name}" Height="64" Foreground="#FF218ACC" FontSize="24"/>
-					</StackPanel>
-				</Button>
-			</Grid>
-		</StackPanel>
-		<StackPanel>
-			<StackPanel Orientation="Horizontal">
-				<Label HorizontalAlignment="Left" Content="Игры"/>
-				<Label HorizontalAlignment="Right" Content="{Binding Games.Count, StringFormat=N0}"/>
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:local="clr-namespace:GameStore.Presentation.Pages" xmlns:Models="clr-namespace:GameStore.DB.Models;assembly=GameStore.DB"
+			 mc:Ignorable="d" Loaded="OnLoaded">
+	<StackPanel Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Center">
+		<StackPanel x:Name="mainInfo" VerticalAlignment="Top" Margin="5">
+			<StackPanel Orientation="Horizontal" Background="Transparent">
+				<Image Width="128" Height="128" Stretch="Fill" Margin="16">
+					<Image.Source>
+						<Binding Path="Avatar">
+							<Binding.TargetNullValue>
+								<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+							</Binding.TargetNullValue>
+						</Binding>
+					</Image.Source>
+				</Image>
+				<TextBlock Text="{Binding Username}" Height="128" Foreground="#FF218ACC" Margin="5" FontSize="32"/>
 			</StackPanel>
-			<ListView x:Name="gamesListView"/>
+			<Separator/>
+			<StackPanel>
+				<Label Content="Команда" HorizontalAlignment="Center" Foreground="Gray" FontSize="24"/>
+				<Grid x:Name="teamInfo">
+					<Label x:Name="noTeamLabel" Content="Отсутствует" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF636363" FontSize="24"/>
+					<Button x:Name="teamLink" Style="{StaticResource HyperlinkButton}" Visibility="Hidden" Click="OnTeamClick" Cursor="Hand">
+						<StackPanel Orientation="Horizontal" Background="Transparent">
+							<Image Width="64" Height="64" Stretch="Fill" Margin="1">
+								<Image.Source>
+									<Binding Path="Member.Team.Logo">
+										<Binding.TargetNullValue>
+											<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+										</Binding.TargetNullValue>
+									</Binding>
+								</Image.Source>
+							</Image>
+							<Label VerticalAlignment="Center" Content="{Binding Member.Team.Name}" Height="64" Foreground="#FF218ACC" FontSize="24"/>
+						</StackPanel>
+					</Button>
+				</Grid>
+			</StackPanel>
+		</StackPanel>
+		<StackPanel Width="720" MaxHeight="{Binding ActualHeight, ElementName=mainInfo, Mode=OneWay}" VerticalAlignment="Top" Margin="5">
+			<Grid >
+				<Label HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" Content="Игры" FontSize="24"/>
+				<Label HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Content="{Binding Games.Count, StringFormat=N0}" FontSize="24"/>
+			</Grid>
+			<ListView MaxHeight="222" x:Name="gamesListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="White">
+				<ListView.ItemContainerStyle>
+					<Style TargetType="{x:Type ListViewItem}">
+						<Setter Property="Background" Value="Transparent" />
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type ListViewItem}">
+									<ContentPresenter />
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</ListView.ItemContainerStyle>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<Grid Margin="5">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Style="{StaticResource TransparentButton}" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand">
+								<Image Width="229" Height="106" Stretch="Fill">
+									<Image.Source>
+										<Binding Path="Logo">
+											<Binding.TargetNullValue>
+												<BitmapImage UriSource="/Resources/DefaultLogo.png"/>
+											</Binding.TargetNullValue>
+										</Binding>
+									</Image.Source>
+								</Image>
+							</Button>
+							<Grid Grid.Column="1">
+								<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Name}" FontSize="16" Margin="5,0" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand"/>
+								<ListView HorizontalAlignment="Left" VerticalAlignment="Bottom" ItemsSource="{Binding Tags}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5" BorderBrush="Transparent" Background="Transparent">
+									<ListView.ItemContainerStyle>
+										<Style TargetType="{x:Type ListViewItem}">
+											<Setter Property="Background" Value="Transparent" />
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="{x:Type ListViewItem}">
+														<ContentPresenter />
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+											<Setter Property="Focusable" Value="False"/>
+											<Setter Property="BorderThickness" Value="0"/>
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="Foreground" Value="White"/>
+												</Trigger>
+											</Style.Triggers>
+										</Style>
+									</ListView.ItemContainerStyle>
+									<ListView.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListView.ItemsPanel>
+									<ListView.ItemTemplate>
+										<DataTemplate>
+											<Border CornerRadius="5" Background="#ff1f3445" Margin="2.5">
+												<TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8"/>
+											</Border>
+										</DataTemplate>
+									</ListView.ItemTemplate>
+								</ListView>
+								<Grid HorizontalAlignment="Right" Width="120">
+									<Grid.Background>
+										<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+											<GradientStop Color="#001b2838"/>
+											<GradientStop Color="#FF1b2838" Offset="0.75"/>
+										</LinearGradientBrush>
+									</Grid.Background>
+								</Grid>
+							</Grid>
+						</Grid>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+				<ListView.DataContext>
+					<Models:Game/>
+				</ListView.DataContext>
+			</ListView>
 		</StackPanel>
 	</StackPanel>
 </UserControl>
