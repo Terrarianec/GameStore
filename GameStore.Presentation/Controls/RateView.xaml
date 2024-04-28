@@ -1,0 +1,27 @@
+﻿<UserControl x:Name="userControl" 
+			 x:Class="GameStore.Presentation.Controls.RateView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:local="clr-namespace:GameStore.Presentation.Controls"
+			 mc:Ignorable="d" 
+			 SizeChanged="OnSizeChanged"
+			 Loaded="OnLoaded">
+	<Grid>
+		<StackPanel x:Name="stackPanel" HorizontalAlignment="Left" Orientation="Horizontal">
+			<Image Source="/Resources/grayLogo.png"/>
+			<Image Source="/Resources/grayLogo.png"/>
+			<Image Source="/Resources/grayLogo.png"/>
+			<Image Source="/Resources/grayLogo.png"/>
+			<Image Source="/Resources/grayLogo.png"/>
+		</StackPanel>
+		<StackPanel x:Name="rateFrogs" HorizontalAlignment="Left" Orientation="Horizontal" Width="0">
+			<Image Source="/Resources/logo.png"/>
+			<Image Source="/Resources/logo.png"/>
+			<Image Source="/Resources/logo.png"/>
+			<Image Source="/Resources/logo.png"/>
+			<Image Source="/Resources/logo.png"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

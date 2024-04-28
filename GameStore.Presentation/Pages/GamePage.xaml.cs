@@ -24,6 +24,7 @@ namespace GameStore.Presentation.Pages
 				.Include(g => g.Team)
 				.Include(g => g.Tags)
 				.Include(g => g.Reviews)
+				.ThenInclude(r => r.User)
 				.Where(g => g.Id == game.Id)
 				.FirstOrDefault();
 
@@ -32,12 +33,14 @@ namespace GameStore.Presentation.Pages
 			if (_game?.Reviews.Count > 0)
 			{
 				var rate = _game.Reviews.Average(r => r.Rate);
-				rateFrogs.Width = rateFrogs.MaxWidth * rate;
+				rateFrogs.Width = rateFrogs.MaxWidth * rate / 5;
 				rateValue.Text = $"{rate:N2}";
 			}
 
 			if (SessionStorage.User != null && _game != null)
 				CheckPurchasedGame(SessionStorage.User, _game);
+
+				reviewsListView.ItemsSource = _game?.Reviews;
 		}
 
 		private void OnTeamClick(object sender, RoutedEventArgs e)
