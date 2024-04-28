@@ -27,7 +27,7 @@ public partial class GameStoreContext : DbContext
 	public virtual DbSet<User> Users { get; set; }
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		=> optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;encrypt=false;database=GameStore;user=исп-31;password=1234567890");
+		=> optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;encrypt=false;database=GameStore;user=исп-31;password=1234567890;MultipleActiveResultSets=true");
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
