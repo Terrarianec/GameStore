@@ -37,8 +37,8 @@ namespace GameStore.Presentation.Pages
 				rateValue.Text = $"{rate:N2}";
 			}
 
-			if (SessionStorage.User != null && _game != null)
-				CheckPurchasedGame(SessionStorage.User, _game);
+			if (MainWindow.User != null && _game != null)
+				CheckPurchasedGame(MainWindow.User, _game);
 
 				reviewsListView.ItemsSource = _game?.Reviews;
 		}
@@ -50,19 +50,19 @@ namespace GameStore.Presentation.Pages
 
 		private async void OnPurcaseButtonClickAsync(object sender, RoutedEventArgs e)
 		{
-			if (SessionStorage.User == null)
+			if (MainWindow.User == null)
 			{
 				MessageBox.Show("Самое время зарегистрироваться!");
 				return;
 			}
 
-			if (SessionStorage.User?.Balance < _game?.Price)
+			if (MainWindow.User?.Balance < _game?.Price)
 			{
 				MessageBox.Show("Недостаточно средств");
 				return;
 			}
 
-			var user = await _context.Users.Include(u => u.Games).FirstAsync(u => u.Id == SessionStorage.User!.Id);
+			var user = await _context.Users.Include(u => u.Games).FirstAsync(u => u.Id == MainWindow.User!.Id);
 			var game = await _context.Games.FirstAsync(g => g.Id == _game!.Id);
 
 			user.Games.Add(game);
@@ -71,8 +71,8 @@ namespace GameStore.Presentation.Pages
 
 			MessageBox.Show("Приобретено :0");
 
-			if (SessionStorage.User != null && _game != null)
-				CheckPurchasedGame(SessionStorage.User, _game);
+			if (MainWindow.User != null && _game != null)
+				CheckPurchasedGame(MainWindow.User, _game);
 		}
 
 		private async void CheckPurchasedGame(User user, Game game)

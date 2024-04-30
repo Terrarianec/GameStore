@@ -6,71 +6,83 @@ using System.Windows.Controls;
 
 namespace GameStore.Presentation.Windows
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
-		private static readonly MainWindow _window = new MainWindow();
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private static MainWindow? _window = null;
+        private static User? _user = null;
 
-		public static MainWindow Instance
-		{
-			get
-			{
-				return _window;
-			}
-		}
+        public static MainWindow Instance
+        {
+            get
+            {
+                return _window ??= new MainWindow(User);
+            }
+            private set
+            {
+                _window = value;
+            }
+        }
+        public static User? User {  
+        get => _user; 
+        set  {
+        _user = value;
+        UpdateUser(_user);
+        } }
 
-		private MainWindow()
-		{
-			InitializeComponent();
+        private MainWindow(User? user)
+        {
+            InitializeComponent();
 
-			if (SessionStorage.User is User authorizedUser)
-				DataContext = (authorizedUser);
-		}
+            if (user is User authorizedUser)
+                DataContext = authorizedUser;
+        }
 
-		public static void UpdateUser(User user)
-		{
-			Instance.DataContext = user;
-		}
+        public static void UpdateUser(User? user)
+        {
+            Instance.DataContext = user;
+        }
 
-		public static void SetActivePage(UserControl page)
-		{
-			var pageContainer = Instance.currentPage;
+        public static void SetActivePage(UserControl page)
+        {
+            var pageContainer = Instance.currentPage;
 
-			pageContainer.Children.Clear();
-			pageContainer.Children.Add(page);
-		}
+            pageContainer.Children.Clear();
+            pageContainer.Children.Add(page);
+        }
 
-		private void OnExitButtonClick(object sender, RoutedEventArgs e)
-		{
-			TempStorage.Delete(nameof(LoginWindow));
+        private void OnExitButtonClick(object sender, RoutedEventArgs e)
+        {
+            TempStorage.Delete(nameof(LoginWindow));
 
-			new LoginWindow(SessionStorage.User?.Login ?? string.Empty)
-				.Show();
+            new LoginWindow(User?.Login ?? string.Empty)
+                .Show();
 
-			Close();
-		}
+            Close();
+        }
 
-		private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
-		{
-			WindowState = WindowState.Minimized;
-		}
+        private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
 
-		private void OnCloseButtonClick(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
+        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
+        {
+            _window = null;
+            Close();
+        }
 
-		private void OnStoreButtonClick(object sender, RoutedEventArgs e)
-		{
-			SetActivePage(new MainStorePage());
-		}
+        private void OnStoreButtonClick(object sender, RoutedEventArgs e)
+        {
+            SetActivePage(new MainStorePage());
+        }
 
-		private void OnProfileButtonClick(object sender, RoutedEventArgs e)
-		{
-			if (SessionStorage.User is User authorizedUser)
-				SetActivePage(new UserProfile(authorizedUser.Id));
-		}
-	}
+        private void OnProfileButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (User is User authorizedUser)
+                SetActivePage(new UserProfile(authorizedUser.Id));
+        }
+    }
 }

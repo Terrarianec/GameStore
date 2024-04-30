@@ -52,8 +52,7 @@ namespace GameStore.Presentation.Windows
 
 			TempStorage.Write(AuthPath, EasyEncryption.Encrypt($"{login};{passwordHash}", _key));
 
-			SessionStorage.User = user;
-
+			MainWindow.User = user;
 			MainWindow.Instance.Show();
 
 			Close();

@@ -25,11 +25,10 @@ namespace GameStore.Presentation.Pages
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
-
 			var user = _context.Users
 				.AsNoTracking()
 				.Include(u => u.Member)
-				.ThenInclude(m => m.Team)
+				.ThenInclude(m => m!.Team)
 				.Include(u => u.Games)
 				.Where(u => u.Id == _id)
 				.FirstOrDefaultAsync();
@@ -68,6 +67,27 @@ namespace GameStore.Presentation.Pages
 					.Include(g => g.Tags)
 					.Where(g => g.Users.Any(u => u.Id == user.Id))
 					.ToListAsync();
+			}
+		}
+
+		private async void OnEditClick(object sender, RoutedEventArgs e)
+		{
+			var changed = new EditProfile((DataContext as User)!)
+			{
+				Owner = MainWindow.Instance
+			}.ShowDialog() == true;
+
+			if (changed)
+			{
+				var user = _context.Users
+					.AsNoTracking()
+					.Include(u => u.Member)
+					.ThenInclude(m => m!.Team)
+					.Include(u => u.Games)
+					.Where(u => u.Id == _id)
+					.FirstOrDefaultAsync();
+
+				SetUser(await user);
 			}
 		}
 	}
