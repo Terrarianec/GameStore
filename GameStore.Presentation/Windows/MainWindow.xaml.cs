@@ -6,74 +6,77 @@ using System.Windows.Controls;
 
 namespace GameStore.Presentation.Windows
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        private static MainWindow? _window = null;
-        private static User? _user = null;
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
+	{
+		private static MainWindow? _window = null;
+		private static User? _user = null;
 
-        public static MainWindow Instance
-        {
-            get
-            {
-                return _window ??= new MainWindow(User);
-            }
-            private set
-            {
-                _window = value;
-            }
-        }
-        public static User? User {  
-        get => _user; 
-        set  {
-        _user = value;
-        UpdateUser(_user);
-        } }
+		public static MainWindow Instance
+		{
+			get
+			{
+				return _window ??= new MainWindow(User);
+			}
+			private set
+			{
+				_window = value;
+			}
+		}
+		public static User? User
+		{
+			get => _user;
+			set
+			{
+				_user = value;
+				UpdateUser(_user);
+			}
+		}
 
-        private MainWindow(User? user)
-        {
-            InitializeComponent();
+		private MainWindow(User? user)
+		{
+			InitializeComponent();
 
-            if (user is User authorizedUser)
-                DataContext = authorizedUser;
-        }
+			if (user is User authorizedUser)
+				DataContext = authorizedUser;
+		}
 
-        public static void UpdateUser(User? user)
-        {
-            Instance.DataContext = user;
-        }
+		public static void UpdateUser(User? user)
+		{
+			Instance.DataContext = user;
+		}
 
-        public static void SetActivePage(UserControl page)
-        {
-            var pageContainer = Instance.currentPage;
+		public static void SetActivePage(UserControl page)
+		{
+			var pageContainer = Instance.currentPage;
 
-            pageContainer.Children.Clear();
-            pageContainer.Children.Add(page);
-        }
+			pageContainer.Children.Clear();
+			pageContainer.Children.Add(page);
+		}
 
-        private void OnExitButtonClick(object sender, RoutedEventArgs e)
-        {
-            TempStorage.Delete(nameof(LoginWindow));
+		private void OnExitButtonClick(object sender, RoutedEventArgs e)
+		{
+			TempStorage.Delete(nameof(LoginWindow));
 
-            new LoginWindow(User?.Login ?? string.Empty)
-                .Show();
+			new LoginWindow(User?.Login ?? string.Empty)
+				.Show();
 
-            _window = null;
+			_window = null;
 
-            Close();
-        }
+			Close();
+		}
 
-        private void OnStoreButtonClick(object sender, RoutedEventArgs e)
-        {
-            SetActivePage(new MainStorePage());
-        }
+		private void OnStoreButtonClick(object sender, RoutedEventArgs e)
+		{
+			SetActivePage(new MainStorePage());
+		}
 
-        private void OnProfileButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (User is User authorizedUser)
-                SetActivePage(new UserProfile(authorizedUser.Id));
-        }
-    }
+		private void OnProfileButtonClick(object sender, RoutedEventArgs e)
+		{
+			if (User is User authorizedUser)
+				SetActivePage(new UserProfile(authorizedUser.Id));
+		}
+	}
 }

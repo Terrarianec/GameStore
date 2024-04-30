@@ -40,7 +40,7 @@ namespace GameStore.Presentation.Pages
 			if (MainWindow.User != null && _game != null)
 				CheckPurchasedGame(MainWindow.User, _game);
 
-				reviewsListView.ItemsSource = _game?.Reviews;
+			reviewsListView.ItemsSource = _game?.Reviews;
 		}
 
 		private void OnTeamClick(object sender, RoutedEventArgs e)
