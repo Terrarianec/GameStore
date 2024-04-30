@@ -10,7 +10,27 @@
 		ResizeMode="NoResize"
 		Icon="/Resources/logo.png" 
 		SizeToContent="WidthAndHeight" 
-		WindowStartupLocation="CenterScreen">
+		WindowStartupLocation="CenterScreen"
+		Background="{StaticResource GameStore.Background}">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Foreground" Value="{StaticResource Button.Static.Foreground}"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+    </Window.Resources>
 	<Window.DataContext>
 		<Models:User/>
 	</Window.DataContext>
@@ -51,7 +71,7 @@
 		</StackPanel>
 		<controls:CaptchaBox x:Name="captcha" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Question="0.1 + 0.2" ExpectedAnswer="0.3" Margin="5"/>
 		<StackPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="5">
-			<Button HorizontalAlignment="Center" Content="Зарегистрироваться" Click="OnSubmit"/>
+			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Зарегистрироваться" Click="OnSubmit" BorderThickness="1" BorderBrush="White" Padding="5"/>
 			<Button Style="{StaticResource HyperlinkButton}" FontSize="9" HorizontalAlignment="Center" Content="Уже есть учётная запись?" Click="OnLoginButtonClick"/>
 		</StackPanel>
 	</Grid>

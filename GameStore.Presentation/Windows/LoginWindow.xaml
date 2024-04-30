@@ -10,7 +10,27 @@
 		SizeToContent="WidthAndHeight" 
 		WindowStartupLocation="CenterScreen" 
 		Icon="/Resources/logo.png"
-		Loaded="OnLoaded">
+		Loaded="OnLoaded"
+        Background="{StaticResource GameStore.Background}">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Foreground" Value="{StaticResource Button.Static.Foreground}"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+    </Window.Resources>
 	<StackPanel Margin="20">
 		<StackPanel Margin="5">
 			<Label Content="Логин"/>
@@ -22,7 +42,7 @@
 		</StackPanel>
 		<controls:CaptchaBox x:Name="captcha" HorizontalAlignment="Center" Question="0.1 + 0.2" ExpectedAnswer="0.3" Margin="5"/>
 		<StackPanel>
-			<Button HorizontalAlignment="Center" DockPanel.Dock="Left" Content="Войти" Click="OnSubmit"/>
+            <Button Style="{StaticResource TransparentButton}"  HorizontalAlignment="Center" DockPanel.Dock="Left" Content="Войти" Click="OnSubmit" BorderBrush="White" BorderThickness="1" Padding="5"/>
 			<Button Style="{DynamicResource HyperlinkButton}" FontSize="9" HorizontalAlignment="Center" DockPanel.Dock="Right" Content="Ещё нет учётной записи?" Click="OnRegisterButtonClick"/>
 		</StackPanel>
 	</StackPanel>
