@@ -42,7 +42,7 @@
 					</StackPanel>
 				</MenuItem.Header>
 				<MenuItem Header="Мой профиль" Click="OnProfileButtonClick"/>
-				<MenuItem Header="Моя команда"/>
+				<MenuItem Header="Моя команда" Click="OnMyTeamClick"/>
 				<MenuItem Header="Выйти" Click="OnExitButtonClick"/>
 			</MenuItem>
 		</Menu>

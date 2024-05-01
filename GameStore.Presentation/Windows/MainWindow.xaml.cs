@@ -1,6 +1,8 @@
-﻿using GameStore.DB.Models;
+﻿using GameStore.DB;
+using GameStore.DB.Models;
 using GameStore.Presentation.Pages;
 using GameStore.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -77,6 +79,32 @@ namespace GameStore.Presentation.Windows
 		{
 			if (User is User authorizedUser)
 				SetActivePage(new UserProfile(authorizedUser.Id));
+		}
+
+		private void OnMyTeamClick(object sender, RoutedEventArgs e)
+		{
+			using var context = new GameStoreContext();
+
+			var myTeam = context.Teams
+				.Include(t => t.Members)
+				.Where(t => t.Members.Any(m => m.UserId == User!.Id))
+				.FirstOrDefault();
+
+			if (myTeam != null)
+			{
+				SetActivePage(new TeamPage(myTeam));
+				return;
+			}
+
+			var team = new Team { OwnerId = User!.Id };
+
+			var created = new EditTeamWindow(team) { Owner = Instance }
+					.ShowDialog() == true;
+
+			if (created)
+			{
+				SetActivePage(new TeamPage(team));
+			}
 		}
 	}
 }

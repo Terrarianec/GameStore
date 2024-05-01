@@ -9,11 +9,11 @@ namespace GameStore.Presentation.Windows
 	/// <summary>
 	/// Логика взаимодействия для EditProfile.xaml
 	/// </summary>
-	public partial class EditProfile : Window
+	public partial class EditProfileWindow : Window
 	{
 		private readonly User _user;
 
-		public EditProfile(User user)
+		public EditProfileWindow(User user)
 		{
 			InitializeComponent();
 

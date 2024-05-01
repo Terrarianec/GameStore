@@ -8,7 +8,7 @@ public partial class GameReview
 
 	public int Rate { get; set; }
 
-	public string? Content { get; set; }
+	public string Content { get; set; } = string.Empty;
 
 	public DateOnly PublishDate { get; set; }
 

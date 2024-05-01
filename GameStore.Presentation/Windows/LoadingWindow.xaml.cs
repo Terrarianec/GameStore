@@ -8,7 +8,7 @@ namespace GameStore.Presentation.Windows
 	/// </summary>
 	public partial class LoadingWindow : Window
 	{
-		private readonly DispatcherTimer _timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1) };
+		private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(1) };
 		private readonly double step = 10;
 		public LoadingWindow()
 		{

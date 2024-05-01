@@ -22,7 +22,7 @@ public partial class GameStoreContext : DbContext
 
 	public virtual DbSet<Team> Teams { get; set; }
 
-	public virtual DbSet<TeamMember> TeamMembers { get; set; }
+	public virtual DbSet<Member> TeamMembers { get; set; }
 
 	public virtual DbSet<User> Users { get; set; }
 
@@ -102,14 +102,16 @@ public partial class GameStoreContext : DbContext
 
 			entity.ToTable(tb => tb.HasTrigger("AddOwnerInTeam"));
 
+			entity.HasIndex(e => e.OwnerId, "IX_Teams").IsUnique();
+
 			entity.Property(e => e.Name).HasMaxLength(32);
 
-			entity.HasOne(d => d.Owner).WithMany(p => p.Teams)
-				.HasForeignKey(d => d.OwnerId)
+			entity.HasOne(d => d.Owner).WithOne(p => p.Team)
+				.HasForeignKey<Team>(d => d.OwnerId)
 				.HasConstraintName("FK_Teams_Users");
 		});
 
-		modelBuilder.Entity<TeamMember>(entity =>
+		modelBuilder.Entity<Member>(entity =>
 		{
 			entity.HasKey(e => new { e.UserId, e.TeamId });
 
@@ -121,7 +123,7 @@ public partial class GameStoreContext : DbContext
 				.HasConstraintName("FK_TeamMembers_Teams");
 
 			entity.HasOne(d => d.User).WithOne(p => p.Member)
-				.HasForeignKey<TeamMember>(d => d.UserId)
+				.HasForeignKey<Member>(d => d.UserId)
 				.OnDelete(DeleteBehavior.ClientSetNull)
 				.HasConstraintName("FK_TeamMembers_Users");
 		});

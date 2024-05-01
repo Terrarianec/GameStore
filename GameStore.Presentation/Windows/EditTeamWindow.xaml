@@ -1,0 +1,49 @@
+﻿<Window x:Class="GameStore.Presentation.Windows.EditTeamWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GameStore.Presentation.Windows" xmlns:controls="clr-namespace:GameStore.Presentation.Controls"
+		mc:Ignorable="d"
+        Title="EditTeamWindow"        SizeToContent="WidthAndHeight" 
+        Background="{StaticResource GameStore.Background}" 
+        Foreground="White"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner" Icon="/Resources/logo.png">
+	<Window.Resources>
+		<Style TargetType="Label">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+		<Style TargetType="PasswordBox">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+		<Style TargetType="DatePicker">
+			<Setter Property="Foreground" Value="{StaticResource Button.Static.Foreground}"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+	</Window.Resources>
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<StackPanel Margin="5">
+			<Label Content="Название команды"/>
+			<TextBox x:Name="usernameField" Text="{Binding Name}" MaxLength="32"/>
+		</StackPanel>
+		<controls:UploadImageArea x:Name="logo" Grid.Row="1" Grid.RowSpan="2" Width="128" Height="128" Margin="10" Source="{Binding Logo}"/>
+		<StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5">
+			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
+		</StackPanel>
+	</Grid>
+</Window>

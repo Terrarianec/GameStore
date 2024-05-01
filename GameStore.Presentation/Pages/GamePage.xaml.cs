@@ -13,7 +13,7 @@ namespace GameStore.Presentation.Pages
 	public partial class GamePage : UserControl
 	{
 		private readonly GameStoreContext _context = new();
-		private readonly Game? _game;
+		private readonly Game _game;
 
 		public GamePage(Game game)
 		{
@@ -26,7 +26,7 @@ namespace GameStore.Presentation.Pages
 				.Include(g => g.Reviews)
 				.ThenInclude(r => r.User)
 				.Where(g => g.Id == game.Id)
-				.FirstOrDefault();
+				.FirstOrDefault() ?? new Game();
 
 			DataContext = _game;
 
@@ -37,15 +37,17 @@ namespace GameStore.Presentation.Pages
 				rateValue.Text = $"{rate:N2}";
 			}
 
-			if (MainWindow.User != null && _game != null)
-				CheckPurchasedGame(MainWindow.User, _game);
+			if (MainWindow.User != null)
+				CheckPurchasedGame(MainWindow.User, _game!);
 
-			reviewsListView.ItemsSource = _game?.Reviews;
+			reviewsListView.ItemsSource = _game!.Reviews;
 		}
 
 		private void OnTeamClick(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Тут должен быть переход на страницу команды");
+			var team = (Team)((ContentControl)sender).Tag;
+
+			MainWindow.SetActivePage(new TeamPage(team));
 		}
 
 		private async void OnPurcaseButtonClickAsync(object sender, RoutedEventArgs e)
@@ -56,14 +58,14 @@ namespace GameStore.Presentation.Pages
 				return;
 			}
 
-			if (MainWindow.User?.Balance < _game?.Price)
+			if (MainWindow.User?.Balance < _game.Price)
 			{
 				MessageBox.Show("Недостаточно средств");
 				return;
 			}
 
 			var user = await _context.Users.Include(u => u.Games).FirstAsync(u => u.Id == MainWindow.User!.Id);
-			var game = await _context.Games.FirstAsync(g => g.Id == _game!.Id);
+			var game = await _context.Games.FirstAsync(g => g.Id == _game.Id);
 
 			user.Games.Add(game);
 
@@ -71,7 +73,7 @@ namespace GameStore.Presentation.Pages
 
 			MessageBox.Show("Приобретено :0");
 
-			if (MainWindow.User != null && _game != null)
+			if (MainWindow.User != null)
 				CheckPurchasedGame(MainWindow.User, _game);
 		}
 

@@ -24,11 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Resource Include="Resources\DefaultLogo.png" />
-	<Resource Include="Resources\DefaultAvatar.png" />
-	<Resource Include="Resources\logo.png" />
-	<Resource Include="Resources\grayLogo.png" />
-	<Resource Include="Resources\frog.jpg" />
+	<Resource Include="Resources\*"/>
   </ItemGroup>
 
   <ItemGroup>

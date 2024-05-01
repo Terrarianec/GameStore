@@ -1,0 +1,40 @@
+﻿<Window x:Class="GameStore.Presentation.Windows.AddMembersWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:GameStore.Presentation.Windows"
+		mc:Ignorable="d"
+		Title="Приглашения"
+		SizeToContent="WidthAndHeight"
+		ShowInTaskbar="False"
+		Background="{DynamicResource GameStore.Background}"
+		ResizeMode="CanMinimize"
+		WindowStartupLocation="CenterOwner" Padding="5" Icon="/Resources/logo.png">
+	<StackPanel>
+		<ListView x:Name="membersListView" Background="Transparent" BorderThickness="0" SelectionMode="Multiple" Padding="5">
+			<ListView.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel/>
+				</ItemsPanelTemplate>
+			</ListView.ItemsPanel>
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="256" ToolTip="{Binding Username}">
+							<Image Width="48" Height="48" Stretch="Fill">
+								<Image.Source>
+									<Binding Path="Avatar">
+										<Binding.TargetNullValue>
+											<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+										</Binding.TargetNullValue>
+									</Binding>
+								</Image.Source>
+							</Image>
+							<Label Foreground="White" Content="{Binding Username}" FontSize="16" VerticalAlignment="Center"/>
+						</StackPanel>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+		<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
+	</StackPanel>
+</Window>

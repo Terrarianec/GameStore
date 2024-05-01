@@ -31,7 +31,7 @@
                 <Label Content="Команда" HorizontalAlignment="Center" Foreground="Gray" FontSize="24"/>
                 <Grid x:Name="teamInfo">
                     <Label x:Name="noTeamLabel" Content="Отсутствует" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF636363" FontSize="24"/>
-                    <Button x:Name="teamLink" Style="{StaticResource HyperlinkButton}" Visibility="Hidden" Click="OnTeamClick" Cursor="Hand">
+                    <Button x:Name="teamLink" Style="{StaticResource HyperlinkButton}" HorizontalAlignment="Left" Visibility="Hidden" Click="OnTeamClick" Cursor="Hand" Tag="{Binding Member.Team}">
                         <StackPanel Orientation="Horizontal" Background="Transparent">
                             <Image Width="64" Height="64" Stretch="Fill" Margin="1">
                                 <Image.Source>

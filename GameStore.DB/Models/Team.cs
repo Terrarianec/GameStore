@@ -4,7 +4,7 @@ public partial class Team
 {
 	public int Id { get; set; }
 
-	public string Name { get; set; } = null!;
+	public string Name { get; set; } = string.Empty;
 
 	public byte[]? Logo { get; set; }
 
@@ -14,5 +14,5 @@ public partial class Team
 
 	public virtual User? Owner { get; set; }
 
-	public virtual ICollection<TeamMember> Members { get; set; } = [];
+	public virtual ICollection<Member> Members { get; set; } = [];
 }

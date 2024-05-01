@@ -13,7 +13,7 @@ namespace GameStore.Presentation.Pages
 	/// </summary>
 	public partial class UserProfile : UserControl
 	{
-		private readonly GameStoreContext _context = new GameStoreContext();
+		private readonly GameStoreContext _context = new();
 		private readonly int _id;
 
 		public UserProfile(int userId)
@@ -38,14 +38,16 @@ namespace GameStore.Presentation.Pages
 
 		private void OnTeamClick(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Тут должен быть переход на страницу команды");
+			var team = (Team)((ContentControl)sender).Tag;
+
+			MainWindow.SetActivePage(new TeamPage(team));
 		}
 
 		private void OnGameClick(object sender, RoutedEventArgs e)
 		{
-			var selectedGame = (Game)((Button)sender).Tag;
+			var game = (Game)((ContentControl)sender).Tag;
 
-			MainWindow.SetActivePage(new GamePage(selectedGame));
+			MainWindow.SetActivePage(new GamePage(game));
 		}
 
 		private async void SetUser(User? user)
@@ -72,10 +74,8 @@ namespace GameStore.Presentation.Pages
 
 		private async void OnEditClick(object sender, RoutedEventArgs e)
 		{
-			var changed = new EditProfile((DataContext as User)!)
-			{
-				Owner = MainWindow.Instance
-			}.ShowDialog() == true;
+			var changed = new EditProfileWindow((DataContext as User)!) { Owner = MainWindow.Instance }
+				.ShowDialog() == true;
 
 			if (changed)
 			{
