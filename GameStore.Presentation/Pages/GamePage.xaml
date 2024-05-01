@@ -66,9 +66,9 @@
 				<TextBlock Grid.Row="1" Grid.Column="0" Text="Дата выхода" Foreground="#FF5BAAD8" FontSize="16" Margin="3"/>
 				<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PublishDate, StringFormat=d MMM yyyy, ConverterCulture=ru}" Foreground="#FF5BAAD8" FontSize="16" Margin="3" HorizontalAlignment="Left"/>
 				<TextBlock Grid.Row="2" Grid.Column="0" Text="Разработчик" Foreground="#FF5BAAD8" FontSize="16" Margin="3"/>
-				<Button Grid.Row="2" Grid.Column="1" Style="{StaticResource TransparentButton}" Content="{Binding Team.Name}" Foreground="#FF5BAAD8" FontSize="16" Margin="3" HorizontalAlignment="Left" Click="OnTeamClick"/>
+				<Button Grid.Row="2" Grid.Column="1" Style="{StaticResource TransparentButton}" Content="{Binding Team.Name}" Foreground="#FF5BAAD8" FontSize="16" Margin="3" HorizontalAlignment="Left" Click="OnTeamClick" Cursor="Hand"/>
 				<TextBlock Grid.Row="3" Grid.Column="0" Text="Место на диске" Foreground="#FF5BAAD8" FontSize="16" Margin="3"/>
-				<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding RequiredFreeSpace, StringFormat=\{0:N0\} MB, ConverterCulture=ru}" Foreground="#FF5BAAD8" FontSize="16" Margin="3" HorizontalAlignment="Left"/>
+				<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding StringifiedRequiredSpace}" Foreground="#FF5BAAD8" FontSize="16" Margin="3" HorizontalAlignment="Left"/>
 			</Grid>
 			<Grid>
 				<ListView ItemsSource="{Binding Tags}" ScrollViewer.HorizontalScrollBarVisibility="Visible" Width="450" Margin="5,0" BorderBrush="Transparent" Background="Transparent" ScrollViewer.CanContentScroll="False">
