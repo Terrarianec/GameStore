@@ -70,7 +70,7 @@
 			</Grid>
 		</Button>
 		<Popup x:Name="popup" StaysOpen="False" PlacementTarget="{Binding ElementName=checkBox}" AllowsTransparency="True">
-			<Border CornerRadius="5" BorderThickness="1" Background="White">
+			<Border CornerRadius="5" BorderThickness="1" Background="{StaticResource GameStore.Background}">
 				<StackPanel Background="Transparent">
 					<Label x:Name="questionLabel" Padding="3" Margin="5"/>
 					<TextBox x:Name="answerBox" MaxLength="32" Padding="3" Margin="5"/>

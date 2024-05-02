@@ -40,7 +40,7 @@ namespace GameStore.Presentation.Pages
 				.ToList();
 
 			if (team?.OwnerId == MainWindow.User?.Id)
-				inviteButton.Visibility = Visibility.Visible;
+				ownerPanel.Visibility = Visibility.Visible;
 			else
 			if (team?.Members.Any(u => u.UserId == MainWindow.User?.Id) ?? false)
 				leaveButton.Visibility = Visibility.Visible;
@@ -107,6 +107,18 @@ namespace GameStore.Presentation.Pages
 				.ExecuteDelete();
 
 			MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+		}
+
+		private void OnDeleteClick(object sender, RoutedEventArgs e)
+		{
+			if (MessageBox.Show("Это необратимое действие. Вы уверены?", "Удаление команды", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
+			{
+				_context.Teams
+					.Where(t => t.Id == _id)
+					.ExecuteDelete();
+
+				MainWindow.SetActivePage(new MainStorePage());
+			}
 		}
 	}
 }

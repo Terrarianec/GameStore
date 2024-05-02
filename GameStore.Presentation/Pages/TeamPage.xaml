@@ -7,187 +7,190 @@
 			 xmlns:Models="clr-namespace:GameStore.DB.Models;assembly=GameStore.DB" x:Class="GameStore.Presentation.Pages.TeamPage"
 			 mc:Ignorable="d"
 			 Loaded="OnLoaded">
-	<UserControl.DataContext>
-		<Models:Team/>
-	</UserControl.DataContext>
-	<Grid HorizontalAlignment="Center" Width="1280">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Label Grid.ColumnSpan="2" FontSize="48" Content="{Binding Name}" Foreground="#FF218ACC" HorizontalAlignment="Center"/>
-		<StackPanel Grid.Row="1" HorizontalAlignment="Left">
-			<Button Style="{StaticResource TransparentButton}" Cursor="Hand" Margin="5" Click="OnEditClick">
-				<Image Width="256" Height="256" Stretch="Fill">
-					<Image.Source>
-						<Binding Path="Logo">
-							<Binding.TargetNullValue>
-								<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-							</Binding.TargetNullValue>
-						</Binding>
-					</Image.Source>
-				</Image>
-			</Button>
-			<Separator/>
-			<Grid>
-				<Button x:Name="inviteButton" Style="{StaticResource TransparentButton}" Content="Добавить участников" Cursor="Hand" Click="OnManageButtonClick" Visibility="Hidden"/>
-				<Button x:Name="leaveButton" Style="{StaticResource TransparentButton}" Content="Покинуть команду" Cursor="Hand" Click="OnLeaveClick" Background="Red" Foreground="White" Visibility="Hidden"/>
-			</Grid>
-			<Separator/>
-			<Grid MaxWidth="256">
-				<StackPanel Orientation="Horizontal" DataContext="{Binding Owner}" HorizontalAlignment="Left" ToolTip="{Binding Username}">
-					<Image Width="48" Height="48" Stretch="Fill">
-						<Image.Source>
-							<Binding Path="Avatar">
-								<Binding.TargetNullValue>
-									<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-								</Binding.TargetNullValue>
-							</Binding>
-						</Image.Source>
-					</Image>
-					<Label Foreground="White" Content="{Binding Username}" FontSize="16" VerticalAlignment="Center"/>
-				</StackPanel>
-				<Grid HorizontalAlignment="Right">
-					<Grid.Background>
-						<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-							<GradientStop Color="#001b2838"/>
-							<GradientStop Color="#FF1b2838" Offset="0.75"/>
-						</LinearGradientBrush>
-					</Grid.Background>
-					<Image Width="32" Height="32" Stretch="Fill" Source="/Resources/logo.png" ToolTip="Владелец команды"/>
-				</Grid>
-			</Grid>
-			<ListView x:Name="membersListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="White">
-				<ListView.ItemContainerStyle>
-					<Style TargetType="{x:Type ListViewItem}">
-						<Setter Property="Background" Value="Transparent" />
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type ListViewItem}">
-									<ContentPresenter />
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</ListView.ItemContainerStyle>
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<Grid Width="256">
-							<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" ToolTip="{Binding Username}">
-								<Image Width="48" Height="48" Stretch="Fill">
-									<Image.Source>
-										<Binding Path="Avatar">
-											<Binding.TargetNullValue>
-												<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-											</Binding.TargetNullValue>
-										</Binding>
-									</Image.Source>
-								</Image>
-								<Label Foreground="White" Content="{Binding Username}" FontSize="16" VerticalAlignment="Center"/>
-							</StackPanel>
-							<Grid HorizontalAlignment="Right">
-								<Grid.Background>
-									<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-										<GradientStop Color="#001b2838"/>
-										<GradientStop Color="#FF1b2838" Offset="0.75"/>
-									</LinearGradientBrush>
-								</Grid.Background>
-								<StackPanel Orientation="Horizontal">
-									<Button Style="{StaticResource TransparentButton}" ToolTip="Сделать владельцем" Cursor="Hand" Click="OnSetOwnerClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}" >
-										<Image Width="32" Height="32" Source="/Resources/crown.png"/>
-									</Button>
-									<Button Style="{StaticResource TransparentButton}" ToolTip="Выгнать из команды" Cursor="Hand" Click="OnKickClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}" >
-										<Image Width="32" Height="32" Source="/Resources/cross.png"/>
-									</Button>
-								</StackPanel>
-							</Grid>
-						</Grid>
-					</DataTemplate>
-				</ListView.ItemTemplate>
-			</ListView>
-		</StackPanel>
-		<ListView x:Name="gamesListView" Grid.Row="1" Grid.Column="1" MaxHeight="1000" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="White" ItemsSource="{Binding Games}">
-			<ListView.ItemContainerStyle>
-				<Style TargetType="{x:Type ListViewItem}">
-					<Setter Property="Background" Value="Transparent" />
-					<Setter Property="Template">
-						<Setter.Value>
-							<ControlTemplate TargetType="{x:Type ListViewItem}">
-								<ContentPresenter />
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
-				</Style>
-			</ListView.ItemContainerStyle>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<Grid Margin="5">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="auto"/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
-						<Button Grid.Column="0" Style="{StaticResource TransparentButton}" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand">
-							<Image Width="229" Height="106" Stretch="Fill">
-								<Image.Source>
-									<Binding Path="Logo">
-										<Binding.TargetNullValue>
-											<BitmapImage UriSource="/Resources/DefaultLogo.png"/>
-										</Binding.TargetNullValue>
-									</Binding>
-								</Image.Source>
-							</Image>
-						</Button>
-						<Grid Grid.Column="1">
-							<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Name}" FontSize="16" Margin="5,0" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand"/>
-							<ListView HorizontalAlignment="Left" VerticalAlignment="Bottom" ItemsSource="{Binding Tags}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5" BorderBrush="Transparent" Background="Transparent">
-								<ListView.ItemContainerStyle>
-									<Style TargetType="{x:Type ListViewItem}">
-										<Setter Property="Background" Value="Transparent" />
-										<Setter Property="Template">
-											<Setter.Value>
-												<ControlTemplate TargetType="{x:Type ListViewItem}">
-													<ContentPresenter />
-												</ControlTemplate>
-											</Setter.Value>
-										</Setter>
-										<Setter Property="Focusable" Value="False"/>
-										<Setter Property="BorderThickness" Value="0"/>
-										<Style.Triggers>
-											<Trigger Property="IsMouseOver" Value="True">
-												<Setter Property="Foreground" Value="White"/>
-											</Trigger>
-										</Style.Triggers>
-									</Style>
-								</ListView.ItemContainerStyle>
-								<ListView.ItemsPanel>
-									<ItemsPanelTemplate>
-										<StackPanel Orientation="Horizontal"/>
-									</ItemsPanelTemplate>
-								</ListView.ItemsPanel>
-								<ListView.ItemTemplate>
-									<DataTemplate>
-										<Border CornerRadius="5" Background="#ff1f3445" Margin="2.5">
-											<TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8"/>
-										</Border>
-									</DataTemplate>
-								</ListView.ItemTemplate>
-							</ListView>
-							<Grid HorizontalAlignment="Right" Width="120">
-								<Grid.Background>
-									<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-										<GradientStop Color="#001b2838"/>
-										<GradientStop Color="#FF1b2838" Offset="0.75"/>
-									</LinearGradientBrush>
-								</Grid.Background>
-							</Grid>
-						</Grid>
-					</Grid>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
-	</Grid>
+    <UserControl.DataContext>
+        <Models:Team/>
+    </UserControl.DataContext>
+    <Grid HorizontalAlignment="Center" Width="1280">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.ColumnSpan="2" FontSize="48" Content="{Binding Name}" Foreground="#FF218ACC" HorizontalAlignment="Center"/>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Left">
+            <Button Style="{StaticResource TransparentButton}" Cursor="Hand" Margin="5" Click="OnEditClick">
+                <Image Width="256" Height="256" Stretch="Fill">
+                    <Image.Source>
+                        <Binding Path="Logo">
+                            <Binding.TargetNullValue>
+                                <BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+                            </Binding.TargetNullValue>
+                        </Binding>
+                    </Image.Source>
+                </Image>
+            </Button>
+            <Separator/>
+            <StackPanel>
+                <StackPanel x:Name="ownerPanel" Visibility="Collapsed">
+                    <Button x:Name="inviteButton" Style="{StaticResource TransparentButton}" Content="Добавить участников" Cursor="Hand" Click="OnManageButtonClick" Background="LimeGreen" Foreground="White" Padding="5"/>
+                    <Button x:Name="deleteButton" Style="{StaticResource TransparentButton}" Content="Удалить команду" Cursor="Hand" Click="OnDeleteClick" Background="Red" Foreground="White" Padding="5"/>
+                </StackPanel>
+                <Button x:Name="leaveButton" Style="{StaticResource TransparentButton}" Content="Покинуть команду" Cursor="Hand" Click="OnLeaveClick" Background="Red" Foreground="White" Visibility="Collapsed" Padding="5"/>
+            </StackPanel>
+            <Separator/>
+            <Grid MaxWidth="256">
+                <StackPanel Orientation="Horizontal" DataContext="{Binding Owner}" HorizontalAlignment="Left" ToolTip="{Binding Username}">
+                    <Image Width="48" Height="48" Stretch="Fill">
+                        <Image.Source>
+                            <Binding Path="Avatar">
+                                <Binding.TargetNullValue>
+                                    <BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+                                </Binding.TargetNullValue>
+                            </Binding>
+                        </Image.Source>
+                    </Image>
+                    <Label Foreground="White" Content="{Binding Username}" FontSize="16" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Grid HorizontalAlignment="Right">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <GradientStop Color="#001b2838"/>
+                            <GradientStop Color="#FF1b2838" Offset="0.75"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Image Width="32" Height="32" Stretch="Fill" Source="/Resources/logo.png" ToolTip="Владелец команды"/>
+                </Grid>
+            </Grid>
+            <ListView x:Name="membersListView" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="White">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="256">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" ToolTip="{Binding Username}">
+                                <Image Width="48" Height="48" Stretch="Fill">
+                                    <Image.Source>
+                                        <Binding Path="Avatar">
+                                            <Binding.TargetNullValue>
+                                                <BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+                                            </Binding.TargetNullValue>
+                                        </Binding>
+                                    </Image.Source>
+                                </Image>
+                                <Label Foreground="White" Content="{Binding Username}" FontSize="16" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Grid HorizontalAlignment="Right">
+                                <Grid.Background>
+                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                        <GradientStop Color="#001b2838"/>
+                                        <GradientStop Color="#FF1b2838" Offset="0.75"/>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource TransparentButton}" ToolTip="Сделать владельцем" Cursor="Hand" Click="OnSetOwnerClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}" >
+                                        <Image Width="32" Height="32" Source="/Resources/crown.png"/>
+                                    </Button>
+                                    <Button Style="{StaticResource TransparentButton}" ToolTip="Выгнать из команды" Cursor="Hand" Click="OnKickClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}" >
+                                        <Image Width="32" Height="32" Source="/Resources/cross.png"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <ListView x:Name="gamesListView" Grid.Row="1" Grid.Column="1" MaxHeight="1000" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="White" ItemsSource="{Binding Games}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource TransparentButton}" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand">
+                            <Image Width="229" Height="106" Stretch="Fill">
+                                <Image.Source>
+                                    <Binding Path="Logo">
+                                        <Binding.TargetNullValue>
+                                            <BitmapImage UriSource="/Resources/DefaultLogo.png"/>
+                                        </Binding.TargetNullValue>
+                                    </Binding>
+                                </Image.Source>
+                            </Image>
+                        </Button>
+                        <Grid Grid.Column="1">
+                            <Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Name}" FontSize="16" Margin="5,0" Click="OnGameClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=Self}}" Cursor="Hand"/>
+                            <ListView HorizontalAlignment="Left" VerticalAlignment="Bottom" ItemsSource="{Binding Tags}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5" BorderBrush="Transparent" Background="Transparent">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                    <ContentPresenter />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Focusable" Value="False"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="5" Background="#ff1f3445" Margin="2.5">
+                                            <TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Grid HorizontalAlignment="Right" Width="120">
+                                <Grid.Background>
+                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                        <GradientStop Color="#001b2838"/>
+                                        <GradientStop Color="#FF1b2838" Offset="0.75"/>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </UserControl>
