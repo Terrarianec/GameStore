@@ -5,6 +5,7 @@ using GameStore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace GameStore.Presentation.Windows
 {
@@ -43,6 +44,47 @@ namespace GameStore.Presentation.Windows
 
 			if (user is User authorizedUser)
 				DataContext = authorizedUser;
+
+#if DEBUG
+			var context = new GameStoreContext();
+
+			KeyDown += (s, e) =>
+			{
+				User? user = null;
+
+				switch (e.Key)
+				{
+					case Key.F4:
+						{
+							if (User is User authorizedUser)
+								user = context.Users
+									.Where(u => u.Id > authorizedUser.Id)
+									.FirstOrDefault();
+
+							user ??= context.Users
+							.FirstOrDefault();
+						}
+						break;
+
+					case Key.F6:
+						{
+							if (User is User authorizedUser)
+								user = context.Users
+									.Where(u => u.Id < authorizedUser.Id)
+									.OrderBy(u => u.Id)
+									.LastOrDefault();
+
+							user ??= context.Users
+								.OrderBy(u => u.Id)
+								.LastOrDefault();
+						}
+						break;
+				}
+
+				if (user is User newUser)
+					User = newUser;
+			};
+#endif
 		}
 
 		public static void UpdateUser(User? user)
