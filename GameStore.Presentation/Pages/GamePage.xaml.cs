@@ -14,6 +14,7 @@ namespace GameStore.Presentation.Pages
 	{
 		private readonly GameStoreContext _context = new();
 		private readonly Game _game;
+		private GameReview _review = new();
 
 		public GamePage(Game game)
 		{
@@ -37,10 +38,21 @@ namespace GameStore.Presentation.Pages
 				rateValue.Text = $"{rate:N2}";
 			}
 
+			reviewsListView.ItemsSource = _game!.Reviews.Where(r => r.UserId != MainWindow.User?.Id).ToList();
+
 			if (MainWindow.User != null)
+			{
 				CheckPurchasedGame(MainWindow.User, _game!);
 
-			reviewsListView.ItemsSource = _game!.Reviews;
+				_review = _game.Reviews
+					.Where(r => r.UserId == MainWindow.User.Id)
+					.FirstOrDefault()
+					?? new GameReview { User = MainWindow.User, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+
+				reviewRate.Width = _review.Rate / 5D * reviewRate.MaxWidth;
+
+				myReview.DataContext = _review;
+			}
 		}
 
 		private void OnTeamClick(object sender, RoutedEventArgs e)
@@ -96,6 +108,55 @@ namespace GameStore.Presentation.Pages
 		{
 			new GameWindow() { Owner = MainWindow.Instance }
 				.ShowDialog();
+		}
+
+		private void OnReviewContentChanged(object sender, TextChangedEventArgs e)
+		{
+			var reviewContent = (TextBox)sender;
+			charactersLeftIndicator.Text = $"{reviewContent.MaxLength - reviewContent.Text.Length}";
+		}
+
+		private void OnRateChanged(object sender, RoutedEventArgs e)
+		{
+			var selectedFrog = (Button)sender;
+			var rate = ((StackPanel)selectedFrog.Parent).Children.IndexOf(selectedFrog) + 1;
+
+			if (_review is GameReview myReview)
+				myReview.Rate = rate;
+
+			reviewRate.Width = rate / 5D * reviewRate.MaxWidth;
+		}
+
+		private void OnPublishClick(object sender, RoutedEventArgs e)
+		{
+			if (_review.UserId != 0)
+			{
+				_context.GameReviews
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _game.Id)
+					.ExecuteUpdate(r => r
+						.SetProperty(r => r.Rate, _review.Rate)
+						.SetProperty(r => r.Content, _review.Content)
+						.SetProperty(r => r.PublishDate, DateOnly.FromDateTime(DateTime.Now))
+				);
+
+				return;
+			}
+
+			_context.GameReviews.Add(_review);
+
+			_context.SaveChanges();
+		}
+
+		private void OnDeleteReviewClick(object sender, RoutedEventArgs e)
+		{
+			if (_review.UserId > 0)
+			{
+				_context.GameReviews
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _game.Id)
+					.ExecuteDelete();
+			}
+
+			_review = new GameReview { User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
 		}
 	}
 }
