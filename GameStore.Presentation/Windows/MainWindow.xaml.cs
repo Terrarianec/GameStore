@@ -58,18 +58,6 @@ namespace GameStore.Presentation.Windows
 						{
 							if (User is User authorizedUser)
 								user = context.Users
-									.Where(u => u.Id > authorizedUser.Id)
-									.FirstOrDefault();
-
-							user ??= context.Users
-							.FirstOrDefault();
-						}
-						break;
-
-					case Key.F6:
-						{
-							if (User is User authorizedUser)
-								user = context.Users
 									.Where(u => u.Id < authorizedUser.Id)
 									.OrderBy(u => u.Id)
 									.LastOrDefault();
@@ -77,6 +65,18 @@ namespace GameStore.Presentation.Windows
 							user ??= context.Users
 								.OrderBy(u => u.Id)
 								.LastOrDefault();
+						}
+						break;
+
+					case Key.F6:
+						{
+							if (User is User authorizedUser)
+								user = context.Users
+									.Where(u => u.Id > authorizedUser.Id)
+									.FirstOrDefault();
+
+							user ??= context.Users
+							.FirstOrDefault();
 						}
 						break;
 				}
