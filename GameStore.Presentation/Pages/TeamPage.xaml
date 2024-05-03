@@ -21,19 +21,18 @@
         </Grid.ColumnDefinitions>
         <Label Grid.ColumnSpan="2" FontSize="48" Content="{Binding Name}" Foreground="#FF218ACC" HorizontalAlignment="Center"/>
         <StackPanel Grid.Row="1" HorizontalAlignment="Left">
-            <Button Style="{StaticResource TransparentButton}" Cursor="Hand" Margin="5" Click="OnEditClick">
-                <Image Width="256" Height="256" Stretch="Fill">
-                    <Image.Source>
-                        <Binding Path="Logo">
-                            <Binding.TargetNullValue>
-                                <BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
-                            </Binding.TargetNullValue>
-                        </Binding>
-                    </Image.Source>
-                </Image>
-            </Button>
-            <Separator/>
-            <StackPanel>
+			<Button Style="{StaticResource TransparentButton}" Cursor="Hand" Margin="5" Click="OnEditClick">
+				<Image Width="256" Height="256" Stretch="Fill">
+					<Image.Source>
+						<Binding Path="Logo">
+							<Binding.TargetNullValue>
+								<BitmapImage UriSource="/Resources/DefaultAvatar.png"/>
+							</Binding.TargetNullValue>
+						</Binding>
+					</Image.Source>
+				</Image>
+			</Button>
+			<StackPanel>
                 <StackPanel x:Name="ownerPanel" Visibility="Collapsed">
                     <Button x:Name="inviteButton" Style="{StaticResource TransparentButton}" Content="Добавить участников" Cursor="Hand" Click="OnManageButtonClick" Background="LimeGreen" Foreground="White" Padding="5"/>
                     <Button x:Name="deleteButton" Style="{StaticResource TransparentButton}" Content="Удалить команду" Cursor="Hand" Click="OnDeleteClick" Background="Red" Foreground="White" Padding="5"/>
