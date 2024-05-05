@@ -148,5 +148,15 @@ namespace GameStore.Presentation.Windows
 				SetActivePage(new TeamPage(team));
 			}
 		}
+
+		private void OnMinimizeClick(object sender, RoutedEventArgs e)
+		{
+			WindowState = WindowState.Minimized;
+		}
+
+		private void OnCloseClick(object sender, RoutedEventArgs e)
+		{
+			Close();
+		}
 	}
 }
