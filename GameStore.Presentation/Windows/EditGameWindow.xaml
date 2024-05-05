@@ -1,0 +1,124 @@
+﻿<Window x:Class="GameStore.Presentation.Windows.EditGameWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:GameStore.Presentation.Windows" 
+		xmlns:controls="clr-namespace:GameStore.Presentation.Controls"
+		mc:Ignorable="d"
+		Title="Игра"
+		SizeToContent="WidthAndHeight" 
+		Background="{StaticResource GameStore.Background}" 
+		Foreground="White"
+		ResizeMode="NoResize"
+		ShowInTaskbar="False"
+		WindowStartupLocation="CenterOwner"
+		Icon="/Resources/logo.png"
+		MaxWidth="1000">
+	<Window.Resources>
+		<Style TargetType="Label">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+		<Style TargetType="PasswordBox">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+		<Style TargetType="DatePicker">
+			<Setter Property="Foreground" Value="{StaticResource Button.Static.Foreground}"/>
+			<Setter Property="BorderBrush" Value="White"/>
+		</Style>
+	</Window.Resources>
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<controls:UploadImageArea x:Name="logo" Grid.Row="0" Grid.RowSpan="2" Width="460" Height="215" Margin="10" Source="{Binding Logo}"/>
+			<Grid Grid.Row="2" Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Label Content="Дата выхода"/>
+			<DatePicker Grid.Column="1" x:Name="publishDate"/>
+
+			<Label Grid.Row="1" Content="Место на диске"/>
+			<TextBox Grid.Row="1" Grid.Column="1" x:Name="requiredSpace" VerticalContentAlignment="Center" Text="{Binding RequiredFreeSpace, ConverterCulture=ru}"/>
+
+			
+				<Button Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource TransparentButton}" Click="OnTagsClick">
+				<Grid>
+				<ListView	ItemsSource="{Binding Tags}" 
+							ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+							Width="460"
+							BorderBrush="Transparent" 
+							Background="Transparent" 
+							ScrollViewer.CanContentScroll="False">
+					<ListView.ItemContainerStyle>
+						<Style TargetType="{x:Type ListViewItem}">
+							<Setter Property="Background" Value="Transparent"/>
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type ListViewItem}">
+										<ContentPresenter />
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="Focusable" Value="False"/>
+							<Setter Property="BorderThickness" Value="0"/>
+							<Style.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter Property="Foreground" Value="White"/>
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</ListView.ItemContainerStyle>
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Orientation="Horizontal"/>
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<Border CornerRadius="5" Background="#ff1f3445" Margin="2.5" HorizontalAlignment="Left">
+								<TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8" FontSize="8"/>
+							</Border>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+				<Rectangle Focusable="False" IsHitTestVisible="False" IsManipulationEnabled="False">
+					<Rectangle.Fill>
+						<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+							<GradientStop Color="#001B2838" Offset="0.75"/>
+							<GradientStop Color="#FF1B2838" Offset="1"/>
+						</LinearGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+			</Grid>
+				</Button>
+		</Grid>
+		<TextBox x:Name="nameField" Grid.Column="1" Text="{Binding Name}" MaxLength="64"/>
+		<TextBox x:Name="descriptionField" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="{Binding Description}" MaxLength="1000"/>
+		<StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5">
+			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
+		</StackPanel>
+	</Grid>
+</Window>
+

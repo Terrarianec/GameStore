@@ -63,7 +63,7 @@ namespace GameStore.Presentation.Pages
 			MainWindow.SetActivePage(new TeamPage(team));
 		}
 
-		private void OnPurcaseButtonClick(object sender, RoutedEventArgs e)
+		private void OnPurchaseButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (MainWindow.User == null)
 			{
@@ -71,7 +71,7 @@ namespace GameStore.Presentation.Pages
 				return;
 			}
 
-			if (MainWindow.User?.Balance < _game.Price)
+			if (MainWindow.User.Balance < _game.Price)
 			{
 				MessageBox.Show("Недостаточно средств");
 				return;
@@ -166,6 +166,12 @@ namespace GameStore.Presentation.Pages
 			}
 
 			_review = new GameReview { GameId = _game.Id, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+		}
+
+		private void OnEditClick(object sender, RoutedEventArgs e)
+		{
+			new EditGameWindow(_game.Id) { Owner = MainWindow.Instance }
+				.ShowDialog();
 		}
 	}
 }
