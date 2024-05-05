@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:Models="clr-namespace:GameStore.DB.Models;assembly=GameStore.DB" 
-		xmlns:pages="clr-namespace:GameStore.Presentation.Pages"
+		xmlns:pages="clr-namespace:GameStore.Presentation.Pages" 
+		x:Name="window"
 		x:Class="GameStore.Presentation.Windows.MainWindow"
 		mc:Ignorable="d"
         Title="FrogStore" 
@@ -26,7 +27,7 @@
 		<Grid Background="#FF171D25">
 			<StackPanel Margin="3" VerticalAlignment="Center" Orientation="Horizontal">
 				<Image Width="24" Height="24" Source="/Resources/logo.png"/>
-				<Label Content="FrogStore" Foreground="#FF218ACC" FontSize="16"/>
+				<Label Content="{Binding Title, ElementName=window}" Foreground="#FF218ACC" FontSize="16"/>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 				<Button x:Name="minimizeButton" Style="{StaticResource TransparentButton}" Margin="3" Click="OnMinimizeClick">
@@ -70,7 +71,7 @@
 			</MenuItem>
 		</Menu>
 		<Grid x:Name="currentPage" Grid.Row="2">
-		<pages:MainStorePage/>
+			<pages:MainStorePage/>
 		</Grid>
 	</Grid>
 </Window>
