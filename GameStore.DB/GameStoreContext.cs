@@ -26,11 +26,20 @@ public partial class GameStoreContext : DbContext
 
 	public virtual DbSet<User> Users { get; set; }
 
+	public virtual Task<bool?> IsOwnerOfTeam(int teamId, int userId) => ExecuteFunction<bool>(nameof(IsOwnerOfTeam), teamId.ToString(), userId.ToString());
+
+	public virtual Task<bool?> IsMemberOfTeam(int teamId, int userId) => ExecuteFunction<bool>(nameof(IsMemberOfTeam), teamId.ToString(), userId.ToString());
+
+	public virtual Task<bool?> IsOwnerOfGame(int gameId, int userId) => ExecuteFunction<bool>(nameof(IsOwnerOfGame), gameId.ToString(), userId.ToString());
+
+	public virtual Task<bool?> IsDeveloperOfGame(int gameId, int userId) => ExecuteFunction<bool>(nameof(IsDeveloperOfGame), gameId.ToString(), userId.ToString());
+
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		=> optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;encrypt=false;database=GameStore;user=исп-31;password=1234567890;MultipleActiveResultSets=true");
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+
 		modelBuilder.Entity<Game>(entity =>
 		{
 			entity.Property(e => e.Name).HasMaxLength(64);
@@ -143,6 +152,28 @@ public partial class GameStoreContext : DbContext
 		});
 
 		OnModelCreatingPartial(modelBuilder);
+	}
+
+	protected virtual async Task<T?> ExecuteFunction<T>(string functionName, params string[] parameters) where T : struct
+	{
+		using var command = Database.GetDbConnection().CreateCommand();
+
+		command.CommandText = $"SELECT dbo.{functionName}({string.Join(',', parameters)})";
+
+		try
+		{
+			await Database.OpenConnectionAsync();
+
+			var result = await command.ExecuteScalarAsync() as T?;
+
+			await Database.CloseConnectionAsync();
+
+			return result;
+		}
+		catch
+		{
+			return default;
+		}
 	}
 
 	partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

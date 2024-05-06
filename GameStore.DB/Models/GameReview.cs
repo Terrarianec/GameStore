@@ -10,7 +10,7 @@ public partial class GameReview
 
 	public string Content { get; set; } = string.Empty;
 
-	public DateOnly PublishDate { get; set; }
+	public DateOnly? PublishDate { get; set; }
 
 	public virtual Game Game { get; set; } = null!;
 
