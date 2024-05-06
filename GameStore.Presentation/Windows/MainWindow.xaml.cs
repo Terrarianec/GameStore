@@ -46,10 +46,9 @@ namespace GameStore.Presentation.Windows
 				DataContext = authorizedUser;
 
 #if DEBUG
-			var context = new GameStoreContext();
-
 			KeyDown += (s, e) =>
 			{
+				var context = new GameStoreContext();
 				User? user = null;
 
 				switch (e.Key)
@@ -134,7 +133,7 @@ namespace GameStore.Presentation.Windows
 
 			if (myTeam != null)
 			{
-				SetActivePage(new TeamPage(myTeam));
+				SetActivePage(new TeamPage(myTeam.Id));
 				return;
 			}
 
@@ -145,7 +144,7 @@ namespace GameStore.Presentation.Windows
 
 			if (created)
 			{
-				SetActivePage(new TeamPage(team));
+				SetActivePage(new TeamPage(team.Id));
 			}
 		}
 

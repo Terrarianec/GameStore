@@ -5,7 +5,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:local="clr-namespace:GameStore.Presentation.Pages"
 			 xmlns:Models="clr-namespace:GameStore.DB.Models;assembly=GameStore.DB" xmlns:controls="clr-namespace:GameStore.Presentation.Controls" x:Class="GameStore.Presentation.Pages.GamePage"
-			 mc:Ignorable="d">
+			 mc:Ignorable="d" Loaded="OnLoaded">
 	<UserControl.DataContext>
 		<Models:Game/>
 	</UserControl.DataContext>

@@ -20,14 +20,16 @@ namespace GameStore.Presentation.Pages
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			using var context = new GameStoreContext();
-			gamesListView.ItemsSource = context.Games.Include(g => g.Tags).ToList();
+			gamesListView.ItemsSource = context.Games
+				.Include(g => g.Tags)
+				.ToList();
 		}
 
 		private void OnGameClick(object sender, RoutedEventArgs e)
 		{
 			var selectedGame = (Game)((Button)sender).Tag;
 
-			MainWindow.SetActivePage(new GamePage(selectedGame));
+			MainWindow.SetActivePage(new GamePage(selectedGame.Id));
 		}
 	}
 }

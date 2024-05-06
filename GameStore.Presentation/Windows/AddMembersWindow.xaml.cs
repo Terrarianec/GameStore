@@ -6,7 +6,7 @@ using System.Windows;
 namespace GameStore.Presentation.Windows
 {
 	/// <summary>
-	/// Логика взаимодействия для ManageTeamMembersWindow.xaml
+	/// Логика взаимодействия для AddmMembersWindow.xaml
 	/// </summary>
 	public partial class AddMembersWindow : Window
 	{

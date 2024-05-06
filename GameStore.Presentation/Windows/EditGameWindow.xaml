@@ -115,7 +115,7 @@
 				</Button>
 		</Grid>
 		<TextBox x:Name="nameField" Grid.Column="1" Text="{Binding Name}" MaxLength="64"/>
-		<TextBox x:Name="descriptionField" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="{Binding Description}" MaxLength="1000"/>
+		<TextBox x:Name="descriptionField" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="{Binding Description}" MaxLength="1000" TextWrapping="Wrap"/>
 		<StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5">
 			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
 		</StackPanel>

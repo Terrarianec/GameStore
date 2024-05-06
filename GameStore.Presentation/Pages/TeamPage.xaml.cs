@@ -15,11 +15,11 @@ namespace GameStore.Presentation.Pages
 		private readonly GameStoreContext _context = new();
 		private readonly int _id;
 
-		public TeamPage(Team team)
+		public TeamPage(int teamId)
 		{
 			InitializeComponent();
 
-			_id = team.Id;
+			_id = teamId;
 		}
 
 		private void OnLoaded(object sender, RoutedEventArgs e)
@@ -41,8 +41,7 @@ namespace GameStore.Presentation.Pages
 
 			if (team?.OwnerId == MainWindow.User?.Id)
 				ownerPanel.Visibility = Visibility.Visible;
-			else
-			if (team?.Members.Any(u => u.UserId == MainWindow.User?.Id) ?? false)
+			else if (team?.Members.Any(u => u.UserId == MainWindow.User?.Id) ?? false)
 				leaveButton.Visibility = Visibility.Visible;
 
 			DataContext = team;
@@ -55,7 +54,7 @@ namespace GameStore.Presentation.Pages
 
 			if (changed)
 			{
-				MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+				MainWindow.SetActivePage(new TeamPage(_id));
 			}
 		}
 
@@ -63,7 +62,7 @@ namespace GameStore.Presentation.Pages
 		{
 			var game = (Game)((ContentControl)sender).Tag;
 
-			MainWindow.SetActivePage(new GamePage(game));
+			MainWindow.SetActivePage(new GamePage(game.Id));
 		}
 
 		private void OnSetOwnerClick(object sender, RoutedEventArgs e)
@@ -76,7 +75,7 @@ namespace GameStore.Presentation.Pages
 
 			MessageBox.Show($"Владелец команды сменён на {user.Username}");
 
-			MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+			MainWindow.SetActivePage(new TeamPage(_id));
 		}
 
 		private void OnKickClick(object sender, RoutedEventArgs e)
@@ -89,7 +88,7 @@ namespace GameStore.Presentation.Pages
 
 			MessageBox.Show($"{user.Username} больше не участник этой команды");
 
-			MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+			MainWindow.SetActivePage(new TeamPage(_id));
 		}
 
 		private void OnManageButtonClick(object sender, RoutedEventArgs e)
@@ -97,7 +96,7 @@ namespace GameStore.Presentation.Pages
 			new AddMembersWindow(new Team { Id = _id }) { Owner = MainWindow.Instance }
 				.ShowDialog();
 
-			MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+			MainWindow.SetActivePage(new TeamPage(_id));
 		}
 
 		private void OnLeaveClick(object sender, RoutedEventArgs e)
@@ -106,7 +105,7 @@ namespace GameStore.Presentation.Pages
 				.Where(m => m.UserId == MainWindow.User!.Id)
 				.ExecuteDelete();
 
-			MainWindow.SetActivePage(new TeamPage(new Team { Id = _id }));
+			MainWindow.SetActivePage(new TeamPage(_id));
 		}
 
 		private void OnDeleteClick(object sender, RoutedEventArgs e)

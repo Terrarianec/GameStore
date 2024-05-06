@@ -14,41 +14,46 @@ namespace GameStore.Presentation.Pages
 	public partial class GamePage : UserControl
 	{
 		private readonly GameStoreContext _context = new();
-		private readonly Game _game;
+		private readonly int _gameId;
 		private GameReview _review = new();
 
-		public GamePage(Game game)
+		public GamePage(int gameId)
 		{
 			InitializeComponent();
 
-			_game = _context.Games
+			_gameId = gameId;
+		}
+
+		private void OnLoaded(object sender, RoutedEventArgs e)
+		{
+			var game = _context.Games
 				.AsNoTracking()
 				.Include(g => g.Team)
 				.Include(g => g.Tags)
 				.Include(g => g.Reviews)
 				.ThenInclude(r => r.User)
-				.Where(g => g.Id == game.Id)
+				.Where(g => g.Id == _gameId)
 				.FirstOrDefault() ?? new Game();
 
-			DataContext = _game;
+			DataContext = game;
 
-			if (_game?.Reviews.Count > 0)
+			if (game?.Reviews.Count > 0)
 			{
-				var rate = _game.Reviews.Average(r => r.Rate);
+				var rate = game.Reviews.Average(r => r.Rate);
 				rateFrogs.Width = rateFrogs.MaxWidth * rate / 5;
 				rateValue.Text = $"{rate:N2}";
 			}
 
-			reviewsListView.ItemsSource = _game!.Reviews.Where(r => r.UserId != MainWindow.User?.Id).ToList();
+			reviewsListView.ItemsSource = game!.Reviews.Where(r => r.UserId != MainWindow.User?.Id).ToList();
 
 			if (MainWindow.User != null)
 			{
-				CheckPurchasedGame(MainWindow.User, _game!);
+				CheckPurchasedGame(MainWindow.User, game!);
 
-				_review = _game.Reviews
+				_review = game.Reviews
 					.Where(r => r.UserId == MainWindow.User.Id)
 					.FirstOrDefault()
-					?? new GameReview { GameId = _game.Id, User = MainWindow.User, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+					?? new GameReview { GameId = game.Id, User = MainWindow.User, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
 
 				reviewRate.Width = _review.Rate / 5D * reviewRate.MaxWidth;
 
@@ -60,10 +65,10 @@ namespace GameStore.Presentation.Pages
 		{
 			var team = (Team)((ContentControl)sender).Tag;
 
-			MainWindow.SetActivePage(new TeamPage(team));
+			MainWindow.SetActivePage(new TeamPage(team.Id));
 		}
 
-		private void OnPurchaseButtonClick(object sender, RoutedEventArgs e)
+		private async void OnPurchaseButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (MainWindow.User == null)
 			{
@@ -71,7 +76,9 @@ namespace GameStore.Presentation.Pages
 				return;
 			}
 
-			if (MainWindow.User.Balance < _game.Price)
+			var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == _gameId);
+
+			if (MainWindow.User.Balance < game!.Price)
 			{
 				MessageBox.Show("Недостаточно средств");
 				return;
@@ -84,7 +91,7 @@ namespace GameStore.Presentation.Pages
 				Direction = System.Data.ParameterDirection.Output
 			};
 
-			_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _game.Id, MainWindow.User!.Id, statusCode);
+			_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _gameId, MainWindow.User!.Id, statusCode);
 
 			if ((int)statusCode.Value != 0)
 				MessageBox.Show("Не удалось приобрести игру");
@@ -92,7 +99,7 @@ namespace GameStore.Presentation.Pages
 				MessageBox.Show("Приобретено");
 
 			if (MainWindow.User != null)
-				CheckPurchasedGame(MainWindow.User, _game);
+				CheckPurchasedGame(MainWindow.User, game);
 		}
 
 		private async void CheckPurchasedGame(User user, Game game)
@@ -138,7 +145,7 @@ namespace GameStore.Presentation.Pages
 			if (_review.UserId != 0)
 			{
 				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _game.Id)
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _gameId)
 					.ExecuteUpdate(r => r
 						.SetProperty(r => r.Rate, _review.Rate)
 						.SetProperty(r => r.Content, _review.Content)
@@ -161,16 +168,16 @@ namespace GameStore.Presentation.Pages
 			if (_review.UserId > 0)
 			{
 				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _game.Id)
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _gameId)
 					.ExecuteDelete();
 			}
 
-			_review = new GameReview { GameId = _game.Id, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+			_review = new GameReview { GameId = _gameId, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
 		}
 
 		private void OnEditClick(object sender, RoutedEventArgs e)
 		{
-			new EditGameWindow(_game.Id) { Owner = MainWindow.Instance }
+			new EditGameWindow(_gameId) { Owner = MainWindow.Instance }
 				.ShowDialog();
 		}
 	}

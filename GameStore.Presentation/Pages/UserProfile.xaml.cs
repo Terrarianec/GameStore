@@ -40,14 +40,14 @@ namespace GameStore.Presentation.Pages
 		{
 			var team = (Team)((ContentControl)sender).Tag;
 
-			MainWindow.SetActivePage(new TeamPage(team));
+			MainWindow.SetActivePage(new TeamPage(team.Id));
 		}
 
 		private void OnGameClick(object sender, RoutedEventArgs e)
 		{
 			var game = (Game)((ContentControl)sender).Tag;
 
-			MainWindow.SetActivePage(new GamePage(game));
+			MainWindow.SetActivePage(new GamePage(game.Id));
 		}
 
 		private async void SetUser(User? user)

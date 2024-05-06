@@ -12,7 +12,7 @@
     </UserControl.DataContext>
     <Grid HorizontalAlignment="Center" Width="1280">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -98,7 +98,7 @@
                                         <GradientStop Color="#FF1b2838" Offset="0.75"/>
                                     </LinearGradientBrush>
                                 </Grid.Background>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding Visibility, ElementName=ownerPanel}" >
                                     <Button Style="{StaticResource TransparentButton}" ToolTip="Сделать владельцем" Cursor="Hand" Click="OnSetOwnerClick" Tag="{Binding DataContext, RelativeSource={RelativeSource Self}}" >
                                         <Image Width="32" Height="32" Source="/Resources/crown.png"/>
                                     </Button>
