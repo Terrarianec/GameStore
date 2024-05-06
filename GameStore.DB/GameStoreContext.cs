@@ -34,6 +34,8 @@ public partial class GameStoreContext : DbContext
 
 	public virtual Task<bool?> IsDeveloperOfGame(int gameId, int userId) => ExecuteFunction<bool>(nameof(IsDeveloperOfGame), gameId.ToString(), userId.ToString());
 
+	public virtual Task<bool?> IsGamePurchased(int gameId, int userId) => ExecuteFunction<bool>(nameof(IsGamePurchased), gameId.ToString(), userId.ToString());
+
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		=> optionsBuilder.UseSqlServer("Server=localhost\\sqlexpress;encrypt=false;database=GameStore;user=исп-31;password=1234567890;MultipleActiveResultSets=true");
 
