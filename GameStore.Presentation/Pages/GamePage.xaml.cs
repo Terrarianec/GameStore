@@ -104,13 +104,8 @@ namespace GameStore.Presentation.Pages
 
 		private async void CheckPurchasedGame(User user, Game game)
 		{
-			var purchasedGames = await _context.Games
-				.Include(g => g.Users)
-				.Where(g => g.Users.Any(u => u.Id == user.Id))
-				.Select(g => g.Id)
-				.ToListAsync();
 
-			if (purchasedGames.Any(id => id == game.Id))
+			if (await _context.IsGamePurchased(game.Id, user.Id) == true)
 			{
 				purchaseButton.Visibility = Visibility.Hidden;
 				playButton.Visibility = Visibility.Visible;
