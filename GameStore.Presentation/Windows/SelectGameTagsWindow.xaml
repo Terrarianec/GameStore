@@ -13,30 +13,40 @@
 		ShowInTaskbar="False" 
 		SizeToContent="WidthAndHeight" 
 		WindowStartupLocation="CenterOwner"
-		Background="{StaticResource GameStore.Background}">
-	<StackPanel>
-		<ListView x:Name="tags"
+		Background="{StaticResource GameStore.Background}"
+        Loaded="OnLoaded">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <TextBox x:Name="searchField" TextChanged="OnSearchValueChanged" FontSize="12"/>
+        <ListView x:Name="tags"
 				  ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
 				  Width="400"
 				  BorderBrush="Transparent"
 				  Background="Transparent"
 				  MaxHeight="800"
-				  SelectionMode="Multiple" SelectionChanged="OnSelectionChanged">
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel/>
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<Border CornerRadius="5" Background="#ff1f3445" Margin="2.5" HorizontalAlignment="Left">
-						<TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8" FontSize="8"/>
-					</Border>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
-		<StackPanel Margin="5">
-			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
-		</StackPanel>
-	</StackPanel>
+				  SelectionMode="Multiple" 
+                  SelectionChanged="OnSelectionChanged">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border CornerRadius="5" Background="#ff1f3445" Margin="2.5" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding Name}" Padding="5" Background="Transparent" Foreground="#FF5baad8"/>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Margin="5">
+            <Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
+        </StackPanel>
+    </StackPanel>
 </Window>
