@@ -28,18 +28,27 @@ namespace GameStore.Presentation.Windows
 
 		private void OnSubmit(object sender, RoutedEventArgs e)
 		{
-			var users = new List<User>();
-
-			foreach (User user in membersListView.SelectedItems)
+			try
 			{
-				users.Add(user);
+				var users = new List<User>();
+
+				foreach (User user in membersListView.SelectedItems)
+				{
+					users.Add(user);
+				}
+
+				_context.TeamMembers
+					.AddRange(users.Select(u => new Member { TeamId = _id, UserId = u.Id }));
+
+				_context.SaveChanges();
 			}
-
-			_context.TeamMembers
-				.AddRange(users.Select(u => new Member { TeamId = _id, UserId = u.Id }));
-
-			_context.SaveChanges();
-
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 			Close();
 		}
 	}

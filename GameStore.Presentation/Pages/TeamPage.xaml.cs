@@ -82,26 +82,52 @@ namespace GameStore.Presentation.Pages
 		{
 			var user = (User)((ContentControl)sender).Tag;
 
-			_context.Teams
-				.Where(t => t.Id == _id)
-				.ExecuteUpdate(t => t.SetProperty(t => t.OwnerId, user.Id));
+			if (MessageBox.Show($"Вы уверены, что хотите передать права на управление командой {user.Username}?", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning) != MessageBoxResult.OK)
+				return;
 
-			MessageBox.Show($"Владелец команды сменён на {user.Username}");
+			try
+			{
+				_context.Teams
+					.Where(t => t.Id == _id)
+					.ExecuteUpdate(t => t.SetProperty(t => t.OwnerId, user.Id));
 
-			MainWindow.SetActivePage(new TeamPage(_id));
+				MessageBox.Show($"Владелец команды сменён на {user.Username}");
+
+				MainWindow.SetActivePage(new TeamPage(_id));
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 
 		private void OnKickClick(object sender, RoutedEventArgs e)
 		{
 			var user = (User)((ContentControl)sender).Tag;
 
-			_context.TeamMembers
-				.Where(m => m.UserId == user.Id)
-				.ExecuteDelete();
+			if (MessageBox.Show($"Вы уверены, что хотите выгнать {user.Username}?", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning) != MessageBoxResult.OK)
+				return;
 
-			System.Windows.MessageBox.Show($"{user.Username} больше не участник этой команды");
+			try
+			{
+				_context.TeamMembers
+					.Where(m => m.UserId == user.Id)
+					.ExecuteDelete();
 
-			MainWindow.SetActivePage(new TeamPage(_id));
+				MessageBox.Show($"{user.Username} больше не участник этой команды");
+
+				MainWindow.SetActivePage(new TeamPage(_id));
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 
 		private void OnManageButtonClick(object sender, RoutedEventArgs e)
@@ -114,46 +140,77 @@ namespace GameStore.Presentation.Pages
 
 		private void OnLeaveClick(object sender, RoutedEventArgs e)
 		{
-			_context.TeamMembers
-				.Where(m => m.UserId == MainWindow.User!.Id)
-				.ExecuteDelete();
+			try
+			{
+				_context.TeamMembers
+					.Where(m => m.UserId == MainWindow.User!.Id)
+					.ExecuteDelete();
 
-			MainWindow.SetActivePage(new TeamPage(_id));
+				MainWindow.SetActivePage(new TeamPage(_id));
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 
 		private void OnDeleteClick(object sender, RoutedEventArgs e)
 		{
 			if (MessageBox.Show("Это необратимое действие. Вы уверены?", "Удаление команды", MessageBoxButton.YesNo, MessageBoxImage.Stop) == MessageBoxResult.Yes)
 			{
-				_context.Teams
-					.Where(t => t.Id == _id)
-					.ExecuteDelete();
+				try
+				{
+					_context.Teams
+						.Where(t => t.Id == _id)
+						.ExecuteDelete();
 
-				MainWindow.SetActivePage(new MainStorePage());
+					MainWindow.SetActivePage(new MainStorePage());
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+					throw;
+#endif
+				}
 			}
 		}
 
 		private void OnCreateGameClick(object sender, RoutedEventArgs e)
 		{
-			var game = new Game
+			try
 			{
-				Name = "Невероятная игра",
-				Description = "Невероятное описание",
-				PublishDate = DateOnly.FromDateTime(DateTime.Now),
-				TeamId = _id
-			};
-			_context.Games.Add(game);
-			_context.SaveChanges();
 
-			var result = new EditGameWindow(game.Id) { Owner = MainWindow.Instance }
-				.ShowDialog();
+				var game = new Game
+				{
+					Name = "Невероятная игра",
+					Description = "Невероятное описание",
+					PublishDate = DateOnly.FromDateTime(DateTime.Now),
+					TeamId = _id
+				};
+				_context.Games.Add(game);
+				_context.SaveChanges();
 
-			if (result == true)
-				MainWindow.SetActivePage(new TeamPage(_id));
-			else
-				_context.Games
-					.Where(g => g.Id == game.Id)
-					.ExecuteDelete();
+				var result = new EditGameWindow(game.Id) { Owner = MainWindow.Instance }
+					.ShowDialog();
+
+				if (result == true)
+					MainWindow.SetActivePage(new TeamPage(_id));
+				else
+					_context.Games
+						.Where(g => g.Id == game.Id)
+						.ExecuteDelete();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 	}
 }

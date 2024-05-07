@@ -98,12 +98,19 @@ namespace GameStore.Presentation.Pages
 				Direction = System.Data.ParameterDirection.Output
 			};
 
-			_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _id, MainWindow.User!.Id, statusCode);
+			try
+			{
+				_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _id, MainWindow.User!.Id, statusCode);
 
-			if ((int)statusCode.Value != 0)
+				if ((int)statusCode.Value != 0)
+					MessageBox.Show("Не удалось приобрести игру");
+				else
+					MessageBox.Show("Приобретено");
+			}
+			catch
+			{
 				MessageBox.Show("Не удалось приобрести игру");
-			else
-				MessageBox.Show("Приобретено");
+			}
 
 			if (MainWindow.User != null)
 				CheckPurchasedGame(MainWindow.User, game);
@@ -111,7 +118,6 @@ namespace GameStore.Presentation.Pages
 
 		private async void CheckPurchasedGame(User user, Game game)
 		{
-
 			if (await _context.IsGamePurchased(game.Id, user.Id) == true)
 			{
 				purchaseButton.Visibility = Visibility.Hidden;
@@ -144,37 +150,61 @@ namespace GameStore.Presentation.Pages
 
 		private void OnPublishClick(object sender, RoutedEventArgs e)
 		{
-			if (_review.UserId != 0)
+			try
 			{
-				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
-					.ExecuteUpdate(r => r
-						.SetProperty(r => r.Rate, _review.Rate)
-						.SetProperty(r => r.Content, _review.Content)
-						.SetProperty(r => r.PublishDate, DateOnly.FromDateTime(DateTime.Now))
-				);
+				if (_review.UserId != 0)
+				{
+					_context.GameReviews
+						.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
+						.ExecuteUpdate(r => r
+							.SetProperty(r => r.Rate, _review.Rate)
+							.SetProperty(r => r.Content, _review.Content)
+							.SetProperty(r => r.PublishDate, DateOnly.FromDateTime(DateTime.Now))
+					);
 
-				return;
+					MessageBox.Show("Оценка обновлена", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+
+					return;
+				}
+
+				_review.UserId = _review.User.Id;
+				_review.User = null;
+
+				_context.GameReviews.Add(_review);
+
+				_context.SaveChanges();
+
+				MessageBox.Show("Оценка создана", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
-
-			_review.UserId = _review.User.Id;
-			_review.User = null;
-
-			_context.GameReviews.Add(_review);
-
-			_context.SaveChanges();
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 
 		private void OnDeleteReviewClick(object sender, RoutedEventArgs e)
 		{
-			if (_review.UserId > 0)
+			try
 			{
-				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
-					.ExecuteDelete();
-			}
+				if (_review.UserId > 0)
+				{
+					_context.GameReviews
+						.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
+						.ExecuteDelete();
+				}
 
-			_review = new GameReview { GameId = _id, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+				_review = new GameReview { GameId = _id, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
 		}
 
 		private void OnEditClick(object sender, RoutedEventArgs e)
@@ -187,11 +217,21 @@ namespace GameStore.Presentation.Pages
 		{
 			if (MessageBox.Show("Вы уверены, что хотите удалить игру? Это действие необратимо.", "Удаление игры", MessageBoxButton.YesNo, MessageBoxImage.Hand) == MessageBoxResult.Yes)
 			{
-				_context.Games
-					.Where(g => g.Id == _id)
-					.ExecuteDelete();
+				try
+				{
+					_context.Games
+						.Where(g => g.Id == _id)
+						.ExecuteDelete();
 
-				MainWindow.SetActivePage(new MainStorePage());
+					MainWindow.SetActivePage(new MainStorePage());
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+					throw;
+#endif
+				}
 			}
 		}
 	}

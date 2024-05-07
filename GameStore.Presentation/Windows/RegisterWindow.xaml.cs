@@ -80,6 +80,9 @@ namespace GameStore.Presentation.Windows
 					errors.AppendLine($"Логин '{loginField.Text}' уже занят");
 			}
 
+			if (usernameField.Text.Length < 4)
+				errors.AppendLine("Имя пользователя не может быть короче 4 символов");
+
 			if (dateOfBirthField.SelectedDate is DateTime selectedDate)
 			{
 				if (DateTime.Now - selectedDate < TimeSpan.FromDays(18 * 365))

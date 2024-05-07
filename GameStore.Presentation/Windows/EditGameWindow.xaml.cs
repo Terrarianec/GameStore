@@ -64,6 +64,9 @@ namespace GameStore.Presentation.Windows
 		{
 			var errors = new StringBuilder();
 
+			if (nameField.Text.Length < 4)
+				errors.AppendLine("Название не может быть короче 4 символов");
+
 			if (publishDate.SelectedDate is not DateTime)
 			{
 				errors.AppendLine("Не указана дата выхода");
