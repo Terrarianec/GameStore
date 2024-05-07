@@ -4,6 +4,9 @@ using GameStore.Presentation.Windows;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
+using Cursors = System.Windows.Input.Cursors;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace GameStore.Presentation.Pages
 {
@@ -22,7 +25,7 @@ namespace GameStore.Presentation.Pages
 			_id = teamId;
 		}
 
-		private void OnLoaded(object sender, RoutedEventArgs e)
+		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			var team = _context.Teams
 				.AsNoTracking()
@@ -39,10 +42,20 @@ namespace GameStore.Presentation.Pages
 				.Select(m => m.User)
 				.ToList();
 
-			if (team?.OwnerId == MainWindow.User?.Id)
-				ownerPanel.Visibility = Visibility.Visible;
-			else if (team?.Members.Any(u => u.UserId == MainWindow.User?.Id) ?? false)
-				leaveButton.Visibility = Visibility.Visible;
+
+			var isOwner = await _context.IsOwnerOfTeam(_id, MainWindow.User!.Id) == true;
+			var isMember = await _context.IsMemberOfTeam(_id, MainWindow.User!.Id) == true;
+
+			ownerPanel.Visibility = isOwner
+				? Visibility.Visible
+				: Visibility.Collapsed;
+
+			leaveButton.Visibility = !isOwner && isMember
+				? Visibility.Visible
+				: Visibility.Collapsed;
+
+			editButton.IsEnabled = isMember;
+			editButton.Cursor = isMember ? Cursors.Hand : Cursors.Arrow;
 
 			DataContext = team;
 		}
@@ -86,7 +99,7 @@ namespace GameStore.Presentation.Pages
 				.Where(m => m.UserId == user.Id)
 				.ExecuteDelete();
 
-			MessageBox.Show($"{user.Username} больше не участник этой команды");
+			System.Windows.MessageBox.Show($"{user.Username} больше не участник этой команды");
 
 			MainWindow.SetActivePage(new TeamPage(_id));
 		}
@@ -118,6 +131,29 @@ namespace GameStore.Presentation.Pages
 
 				MainWindow.SetActivePage(new MainStorePage());
 			}
+		}
+
+		private void OnCreateGameClick(object sender, RoutedEventArgs e)
+		{
+			var game = new Game
+			{
+				Name = "Невероятная игра",
+				Description = "Невероятное описание",
+				PublishDate = DateOnly.FromDateTime(DateTime.Now),
+				TeamId = _id
+			};
+			_context.Games.Add(game);
+			_context.SaveChanges();
+
+			var result = new EditGameWindow(game.Id) { Owner = MainWindow.Instance }
+				.ShowDialog();
+
+			if (result == true)
+				MainWindow.SetActivePage(new TeamPage(_id));
+			else
+				_context.Games
+					.Where(g => g.Id == game.Id)
+					.ExecuteDelete();
 		}
 	}
 }

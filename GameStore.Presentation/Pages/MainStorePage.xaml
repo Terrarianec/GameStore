@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <Style x:Key="Price" TargetType="{x:Type TextBlock}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#FFB2FF91"/>
+            <Setter Property="Foreground" Value="LimeGreen"/>
             <Setter Property="FontSize" Value="14"/>
             <Style.Triggers>
                 <Trigger Property="Text" Value="Бесплатно">

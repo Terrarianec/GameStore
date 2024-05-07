@@ -14,17 +14,17 @@ namespace GameStore.Presentation.Pages
 	public partial class GamePage : UserControl
 	{
 		private readonly GameStoreContext _context = new();
-		private readonly int _gameId;
+		private readonly int _id;
 		private GameReview _review = new();
 
 		public GamePage(int gameId)
 		{
 			InitializeComponent();
 
-			_gameId = gameId;
+			_id = gameId;
 		}
 
-		private void OnLoaded(object sender, RoutedEventArgs e)
+		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			var game = _context.Games
 				.AsNoTracking()
@@ -32,7 +32,7 @@ namespace GameStore.Presentation.Pages
 				.Include(g => g.Tags)
 				.Include(g => g.Reviews)
 				.ThenInclude(r => r.User)
-				.Where(g => g.Id == _gameId)
+				.Where(g => g.Id == _id)
 				.FirstOrDefault() ?? new Game();
 
 			DataContext = game;
@@ -58,6 +58,13 @@ namespace GameStore.Presentation.Pages
 				reviewRate.Width = _review.Rate / 5D * reviewRate.MaxWidth;
 
 				myReview.DataContext = _review;
+
+				editButton.Visibility = await _context.IsDeveloperOfGame(_id, MainWindow.User.Id) == true
+					? Visibility.Visible
+					: Visibility.Collapsed;
+				deleteButton.Visibility = await _context.IsOwnerOfGame(_id, MainWindow.User.Id) == true
+					? Visibility.Visible
+					: Visibility.Collapsed;
 			}
 		}
 
@@ -76,7 +83,7 @@ namespace GameStore.Presentation.Pages
 				return;
 			}
 
-			var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == _gameId);
+			var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == _id);
 
 			if (MainWindow.User.Balance < game!.Price)
 			{
@@ -91,7 +98,7 @@ namespace GameStore.Presentation.Pages
 				Direction = System.Data.ParameterDirection.Output
 			};
 
-			_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _gameId, MainWindow.User!.Id, statusCode);
+			_context.Database.ExecuteSqlRaw("dbo.PurchaseGame @p0, @p1, @StatusCode OUT", _id, MainWindow.User!.Id, statusCode);
 
 			if ((int)statusCode.Value != 0)
 				MessageBox.Show("Не удалось приобрести игру");
@@ -140,7 +147,7 @@ namespace GameStore.Presentation.Pages
 			if (_review.UserId != 0)
 			{
 				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _gameId)
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
 					.ExecuteUpdate(r => r
 						.SetProperty(r => r.Rate, _review.Rate)
 						.SetProperty(r => r.Content, _review.Content)
@@ -163,17 +170,29 @@ namespace GameStore.Presentation.Pages
 			if (_review.UserId > 0)
 			{
 				_context.GameReviews
-					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _gameId)
+					.Where(r => r.UserId == MainWindow.User!.Id && r.GameId == _id)
 					.ExecuteDelete();
 			}
 
-			_review = new GameReview { GameId = _gameId, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
+			_review = new GameReview { GameId = _id, User = MainWindow.User!, Rate = 1, PublishDate = DateOnly.FromDateTime(DateTime.Now) };
 		}
 
 		private void OnEditClick(object sender, RoutedEventArgs e)
 		{
-			new EditGameWindow(_gameId) { Owner = MainWindow.Instance }
-				.ShowDialog();
+			if (new EditGameWindow(_id) { Owner = MainWindow.Instance }.ShowDialog() == true)
+				MainWindow.SetActivePage(new GamePage(_id));
+		}
+
+		private void OnDeleteClick(object sender, RoutedEventArgs e)
+		{
+			if (MessageBox.Show("Вы уверены, что хотите удалить игру? Это действие необратимо.", "Удаление игры", MessageBoxButton.YesNo, MessageBoxImage.Hand) == MessageBoxResult.Yes)
+			{
+				_context.Games
+					.Where(g => g.Id == _id)
+					.ExecuteDelete();
+
+				MainWindow.SetActivePage(new MainStorePage());
+			}
 		}
 	}
 }

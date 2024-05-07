@@ -43,11 +43,12 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="400"/>
 		</Grid.ColumnDefinitions>
 		<controls:UploadImageArea x:Name="logo" Grid.Row="0" Grid.RowSpan="2" Width="460" Height="215" Margin="10" Source="{Binding Logo}"/>
 		<Grid Grid.Row="2" Margin="5">
 			<Grid.RowDefinitions>
+				<RowDefinition/>
 				<RowDefinition/>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -59,17 +60,21 @@
 			<Label Content="Дата выхода"/>
 			<DatePicker Grid.Column="1" x:Name="publishDate"/>
 
-			<Label Grid.Row="1" Content="Место на диске"/>
-			<TextBox Grid.Row="1" Grid.Column="1" x:Name="requiredSpace" VerticalContentAlignment="Center" Text="{Binding RequiredFreeSpace, ConverterCulture=ru}"/>
+			<Label Grid.Row="1" Content="Стоимость"/>
+			<TextBox Grid.Row="1" Grid.Column="1" x:Name="price" VerticalContentAlignment="Center" Text="{Binding Price, StringFormat=N2, ConverterCulture=ru}"/>
+
+			<Label Grid.Row="2" Content="Место на диске"/>
+			<TextBox Grid.Row="2" Grid.Column="1" x:Name="requiredSpace" VerticalContentAlignment="Center" Text="{Binding RequiredFreeSpace, ConverterCulture=ru}"/>
 
 
-			<Button Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource TransparentButton}" Click="OnTagsClick">
+			<Button Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource TransparentButton}" Click="OnTagsClick">
 				<Grid>
+					<Label HorizontalAlignment="Left" Content="Здесь могли быть теги" VerticalAlignment="Center" Foreground="Gray"/>
 					<ListView	ItemsSource="{Binding Tags}" 
 							ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
 							Width="460"
 							BorderBrush="Transparent" 
-							Background="Transparent" 
+							Background="{StaticResource GameStore.Background}" 
 							ScrollViewer.CanContentScroll="False"
 							IsHitTestVisible="False">
 						<ListView.ItemContainerStyle>
@@ -116,7 +121,7 @@
 			</Button>
 		</Grid>
 		<TextBox x:Name="nameField" Grid.Column="1" Text="{Binding Name}" MaxLength="64"/>
-		<TextBox x:Name="descriptionField" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="{Binding Description}" MaxLength="1000" TextWrapping="Wrap"/>
+		<TextBox x:Name="descriptionField" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="{Binding Description}" MaxLength="1000" TextWrapping="Wrap" AcceptsReturn="True"/>
 		<StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5">
 			<Button Style="{StaticResource TransparentButton}" HorizontalAlignment="Center" Content="Сохранить" Click="OnSubmit" Padding="5" BorderBrush="White" BorderThickness="1"/>
 		</StackPanel>

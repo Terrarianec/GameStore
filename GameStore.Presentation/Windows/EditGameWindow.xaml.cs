@@ -19,7 +19,7 @@ namespace GameStore.Presentation.Windows
 
 			_game = _context.Games
 				.Include(g => g.Tags)
-				.FirstOrDefault(g => g.Id == id) ?? new Game();
+				.FirstOrDefault(g => g.Id == id) ?? new Game() { PublishDate = DateOnly.FromDateTime(DateTime.Now) };
 
 			logo.Source = _game.Logo;
 			publishDate.SelectedDate = _game.PublishDate.ToDateTime(TimeOnly.FromTimeSpan(TimeSpan.Zero));
@@ -42,6 +42,9 @@ namespace GameStore.Presentation.Windows
 			{
 				_game.Tags = _context.Tags.Where(t => tags.Contains(t.Id)).ToList();
 
+				if (_game.Id == 0)
+					_context.Games.Add(_game);
+
 				_context.SaveChanges();
 
 				DialogResult = true;
@@ -51,6 +54,9 @@ namespace GameStore.Presentation.Windows
 			catch (Exception ex)
 			{
 				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
 			}
 		}
 

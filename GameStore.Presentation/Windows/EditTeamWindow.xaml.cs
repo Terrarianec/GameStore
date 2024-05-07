@@ -19,6 +19,8 @@ namespace GameStore.Presentation.Windows
 
 			_team = team;
 
+			logo.Source = _team.Logo;
+
 			DataContext = _team;
 		}
 

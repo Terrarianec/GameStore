@@ -29,10 +29,11 @@
 				</Image.Source>
 			</Image>
 			<Grid>
-				<Button x:Name="purchaseButton" Style="{StaticResource TransparentButton}" Content="{Binding StringifiedPrice}" Background="LimeGreen" Foreground="White" Click="OnPurchaseButtonClick"/>
-				<Button x:Name="playButton" Style="{StaticResource TransparentButton}" Content="Играть" Background="DodgerBlue" Foreground="White" Visibility="Hidden" Click="OnPlayButtonClick"/>
+				<Button x:Name="purchaseButton" Style="{StaticResource TransparentButton}" Content="{Binding StringifiedPrice}" Background="DarkGreen" Foreground="White" Click="OnPurchaseButtonClick"/>
+				<Button x:Name="playButton" Style="{StaticResource TransparentButton}" Content="Играть" Background="DarkGreen" Foreground="White" Visibility="Hidden" Click="OnPlayButtonClick"/>
 			</Grid>
-			<Button Style="{StaticResource TransparentButton}" Content="Редактировать" Background="DodgerBlue" Foreground="White" Click="OnEditClick"/>
+			<Button x:Name="editButton" Style="{StaticResource TransparentButton}" Content="Редактировать" Background="DodgerBlue" Foreground="White" Click="OnEditClick"/>
+			<Button x:Name="deleteButton" Style="{StaticResource TransparentButton}" Content="Удалить" Background="DarkRed" Foreground="White" Click="OnDeleteClick"/>
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition/>
