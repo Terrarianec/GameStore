@@ -85,6 +85,7 @@ namespace GameStore.Presentation.Windows
 		{
 			new RegisterWindow(loginField.Text, passwordField.Password)
 				.Show();
+
 			Close();
 		}
 	}

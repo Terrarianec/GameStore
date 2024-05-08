@@ -157,5 +157,41 @@ namespace GameStore.Presentation.Windows
 		{
 			Close();
 		}
+
+		private async void OnDeleteClick(object sender, RoutedEventArgs e)
+		{
+			using var context = new GameStoreContext();
+
+			if (await context.TeamMembers.AnyAsync(m => m.UserId == User!.Id))
+			{
+				MessageBox.Show("Пока вы не покинете команду, вы не можете удалить свой аккаунт", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			try
+			{
+				await context.Users
+					.Where(u => u.Id == User!.Id)
+					.ExecuteDeleteAsync();
+
+				MessageBox.Show("Аккаунт больше не существует", "", MessageBoxButton.OK, MessageBoxImage.Information);
+
+				TempStorage.Delete(nameof(LoginWindow));
+
+				new LoginWindow(User?.Login ?? string.Empty)
+					.Show();
+
+				_window = null;
+
+				Close();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
+			}
+		}
 	}
 }

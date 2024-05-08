@@ -44,9 +44,8 @@
 			</StackPanel>
 		</Grid>
 		<StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
-			<Button Style="{StaticResource TransparentButton}" Content="Магазин" FontSize="20" Margin="10,0" Click="OnStoreButtonClick"/>
-			<Button Style="{StaticResource TransparentButton}" Content="Библиотебка" FontSize="20" Margin="10,0"/>
-			<Button Style="{StaticResource TransparentButton}" Content="{Binding Username}" FontSize="20" Margin="10,0" Click="OnProfileButtonClick"/>
+            <Button Style="{StaticResource TransparentButton}" Content="Магазин" FontSize="20" Margin="10,0" Click="OnStoreButtonClick"/>
+            <Button Style="{StaticResource TransparentButton}" Content="{Binding Username}" FontSize="20" Margin="10,0" Click="OnProfileButtonClick"/>
 		</StackPanel>
 		<Menu Grid.Row="1" HorizontalAlignment="Right" Background="Transparent" Margin="20,0">
 			<MenuItem Background="#FF171D25">
@@ -68,6 +67,7 @@
 				<MenuItem Header="Мой профиль" Click="OnProfileButtonClick"/>
 				<MenuItem Header="Моя команда" Click="OnMyTeamClick"/>
 				<MenuItem Header="Выйти" Click="OnExitButtonClick"/>
+				<MenuItem Header="Удалить свой аккаунт" Click="OnDeleteClick"/>
 			</MenuItem>
 		</Menu>
 		<Grid x:Name="currentPage" Grid.Row="2">

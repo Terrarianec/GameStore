@@ -62,6 +62,9 @@ namespace GameStore.Presentation.Windows
 			catch (Exception ex)
 			{
 				MessageBox.Show($"{ex.Message}\n{ex.Data}\n\n{ex.StackTrace}");
+#if DEBUG
+				throw;
+#endif
 			}
 		}
 
