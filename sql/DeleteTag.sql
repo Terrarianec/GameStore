@@ -1,0 +1,4 @@
+CREATE PROCEDURE DeleteTag
+	@Id INT
+AS
+	DELETE Tags WHERE Id = @Id
